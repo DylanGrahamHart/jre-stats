@@ -1,0 +1,20 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+.row {
+  width: 1040px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+#header {
+  background: #333;
+}
+#header a {
+  font-size: 24px;
+  color: #fff;
+}

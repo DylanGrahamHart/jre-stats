@@ -13,5 +13,16 @@ function htmlWatch() {
   gulp.watch(HTML_SRC, html);
 }
 
-exports.default = gulp.series(html, htmlWatch)
+const CSS_SRC = 'src/main/resources/static/**/*.css';
+
+function html() {
+  return gulp.src(CSS_SRC)
+    .pipe(gulp.dest('out/production/resources/static'));
+}
+
+function htmlWatch() {
+  gulp.watch(CSS_SRC, html);
+}
+
+exports.default = gulp.series(htmlWatch, html);
 
