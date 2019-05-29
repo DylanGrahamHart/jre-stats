@@ -3,6 +3,8 @@
 
 <head>
   <title>JRE Stats</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/app.css">
 </head>
 
@@ -14,9 +16,12 @@
     </div>
   </div>
 
-  {{# channel.items.0.statistics }}
-    Subscribers: {{ subscriberCount }}
-  {{/ channel.items.0.statistics }}
+  <div class="row">
+    {{# channel.items.0.statistics }}
+      <p>Subscribers: {{ subscriberCount }}</p>
+      <p>Views: {{ viewCount }}</p>
+    {{/ channel.items.0.statistics }}
+  </div>
 
 </body>
 </html>
