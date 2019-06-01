@@ -23,5 +23,20 @@
     {{/ channel.items.0.statistics }}
   </div>
 
+  <div class="row">
+    {{# videos.items }}
+
+      {{# snippet }}
+        <div class="video">
+          <a href="https://www.youtube.com/watch?v={{ id.videoId }}">
+            <p>{{ title }}</p>
+            <p><img src="{{ thumbnails.high.url }}"></p>
+          </a>
+        </div>
+      {{/ snippet }}
+
+    {{/ videos.items }}
+  </div>
+
 </body>
 </html>

@@ -27,16 +27,27 @@ public class App {
 @Controller
 class MainController {
 
+    private String JRE_ID = "UCzQUP1qoWDoEbmsQxvdjxgQ";
+
 	@GetMapping("/")
 	public ModelAndView home() {
 	    ModelAndView mav = new ModelAndView("home");
 
         Map<String, Object> channel = YouTubeApiService.get("channels",
-                "id", "UCzQUP1qoWDoEbmsQxvdjxgQ",
+                "id", JRE_ID,
                 "part", "snippet,statistics"
         );
 
+        Map<String, Object> videos = YouTubeApiService.get("search",
+                "channelId", JRE_ID,
+                "part", "snippet",
+                "order", "date",
+                "maxResults", "50",
+                "type", "video"
+        );
+
         mav.addObject("channel", channel);
+        mav.addObject("videos", videos);
         return mav;
 	}
 
@@ -53,8 +64,6 @@ class HttpUtil {
 }
 
 class YouTubeApiService {
-
-    private static ObjectMapper mapper = new ObjectMapper();
 
     private static String API_KEY = "AIzaSyAa31jop5ZIsuF4eUNYvS1dRNFUYdNaOmw";
     private static String API_HOST = "https://www.googleapis.com/youtube/v3/";
