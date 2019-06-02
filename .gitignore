@@ -13,3 +13,5 @@ HELP.md
 # Derp
 node_modules/
 .DS_Store
+src/main/resources/static/app.css
+src/main/resources/static/app.css.map

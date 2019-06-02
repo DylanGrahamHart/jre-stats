@@ -3,6 +3,7 @@
 
 <head>
   <title>JRE Stats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/app.css">
@@ -28,26 +29,32 @@
     </div>
   </div>
 
-  <div class="row">
-    {{# channel.items.0.statistics }}
-      <p>Subscribers: {{ subscriberCount }}</p>
-      <p>Views: {{ viewCount }}</p>
-    {{/ channel.items.0.statistics }}
+  <div class="subs-views">
+    <div class="row">
+      <div class="subs-views__inner">
+        {{# channel.items.0.statistics }}
+          <div class="subs-views__stat"><b>Subscribers:</b> {{ subscriberCount }}</div>
+          <div class="subs-views__stat"><b>Views:</b> {{ viewCount }}</div>
+        {{/ channel.items.0.statistics }}
+      </div>
+    </div>
   </div>
 
-  <div class="row">
-    {{# videos.items }}
+  <div class="videos">
+    <div class="row">
+      {{# videos.items }}
 
-      {{# snippet }}
-        <div class="video">
-          <a href="https://www.youtube.com/watch?v={{ id.videoId }}" target="_blank">
-            <p>{{ title }}</p>
-            <p><img src="{{ thumbnails.high.url }}"></p>
-          </a>
-        </div>
-      {{/ snippet }}
+        {{# snippet }}
+          <div class="video">
+            <a href="https://www.youtube.com/watch?v={{ id.videoId }}" target="_blank">
+              <div class="video__img"><img src="{{ thumbnails.high.url }}"></div>
+              <div class="video__title">{{{ title }}}</div>
+            </a>
+          </div>
+        {{/ snippet }}
 
-    {{/ videos.items }}
+      {{/ videos.items }}
+    </div>
   </div>
 
 </body>
