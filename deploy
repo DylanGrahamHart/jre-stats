@@ -1,0 +1,2 @@
+./gradlew build
+gsutil cp build/libs/*.jar gs://jre-stats-jars/derp.jar
