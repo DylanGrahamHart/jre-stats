@@ -53,19 +53,11 @@ class MainController {
 
 }
 
-class HttpUtil {
+class YouTubeApiService {
 
     private static RestTemplate restTemplate = new RestTemplate();
 
-    public static Map<String, Object> get(String url) {
-        return restTemplate.getForObject(url, Map.class);
-    }
-
-}
-
-class YouTubeApiService {
-
-    private static String API_KEY = "AIzaSyAa31jop5ZIsuF4eUNYvS1dRNFUYdNaOmw";
+    private static String API_KEY = "AIzaSyDEEwGOwUujh6rA6gWQnQRUw2-Uyfx1OOI";
     private static String API_HOST = "https://www.googleapis.com/youtube/v3/";
 
     public static Map<String, Object> get(String resource, String... params) {
@@ -75,7 +67,7 @@ class YouTubeApiService {
             url += params[i] + "=" + params[i+1] + "&";
         }
 
-        return HttpUtil.get(url);
+        return restTemplate.getForObject(url, Map.class);
     }
 
 }
