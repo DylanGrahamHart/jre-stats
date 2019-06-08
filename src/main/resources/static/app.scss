@@ -30,6 +30,11 @@ a {
   padding: 0 20px;
   margin: 0 auto;
 }
+.row:after {
+  content: '';
+  display: block;
+  clear: both;
+}
 .fleft {
   float: left;
 }
@@ -111,5 +116,6 @@ a {
   &__title {
     font-size: 14px;
     color: blue;
+    height: 2em;
   }
 }
