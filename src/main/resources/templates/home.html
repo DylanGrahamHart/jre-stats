@@ -30,28 +30,32 @@
 <body>
 
   <div id="header">
-    <div class="row">
-      <a href="/">JRE Stats</a>
-    </div>
-  </div>
-
-  <div class="subs-views">
-    <div class="row">
-      <div class="subs-views__inner">
-        {{# channel.items.0.statistics }}
-          <div class="subs-views__stat"><b>Subscribers:</b> {{ subscriberCount }}</div>
-          <div class="subs-views__stat"><b>Views:</b> {{ viewCount }}</div>
-        {{/ channel.items.0.statistics }}
+    <div class="container">
+      <div class="row">
+        <a href="/" class="col-12">JRE Stats</a>
       </div>
     </div>
   </div>
 
-  <div class="videos">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="subs-views">
+          {{# channel.items.0.statistics }}
+            <div class="subs-views__stat"><b>Subscribers:</b> {{ subscriberCount }}</div>
+            <div class="subs-views__stat"><b>Views:</b> {{ viewCount }}</div>
+          {{/ channel.items.0.statistics }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
     <div class="row">
       {{# videos.items }}
 
         {{# snippet }}
-          <div class="video">
+          <div class="video col-xs-6 col-md-4 col-lg-3">
             <a href="https://www.youtube.com/watch?v={{ resourceId.videoId }}" target="_blank">
               <div class="video__img"><img src="{{ thumbnails.high.url }}"></div>
               <div class="video__title">{{{ title }}}</div>

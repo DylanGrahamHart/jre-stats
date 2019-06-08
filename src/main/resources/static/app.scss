@@ -24,11 +24,52 @@ p {
 a {
   text-decoration: none;
 }
-.row {
+.container {
   width: 1040px;
   max-width: 100%;
-  padding: 0 20px;
+  padding: 0 10px;
   margin: 0 auto;
+}
+.row {
+  margin: 0 -10px;
+}
+[class*="col-"] {
+  padding: 0 10px;
+  float: left;
+}
+@for $i from 1 through 12 {
+  $width: percentage($i / 12);
+
+  .col-#{$i} {
+    width: $width;
+  }
+}
+@for $i from 1 through 12 {
+  $width: percentage($i / 12);
+
+  @media (min-width: $small) {
+    .col-xs-#{$i} {
+      width: $width;
+    }
+  }
+}
+@for $i from 1 through 12 {
+  $width: percentage($i / 12);
+
+  @media (min-width: $medium) {
+    .col-md-#{$i} {
+      width: $width;
+    }
+  }
+}
+@for $i from 1 through 12 {
+  $width: percentage($i / 12);
+
+  @media (min-width: $large) {
+    .col-lg-#{$i} {
+      width: $width;
+    }
+  }
 }
 .row:after {
   content: '';
@@ -54,13 +95,10 @@ a {
   transform: skew(20deg);
 }
 .subs-views {
-
-  &__inner {
-    background: #eee;
-    padding: 20px;
-    border-radius: 2px;
-    margin-bottom: 20px;
-  }
+  background: #eee;
+  padding: 20px;
+  border-radius: 2px;
+  margin-bottom: 20px;
 
   &__stat {
     &:first-child {
@@ -71,20 +109,10 @@ a {
 }
 
 .video {
+  margin-bottom: 20px;
+
   &:hover {
     text-decoration: underline;
-  }
-
-  @media (min-width: $small) {
-    float: left;
-    padding: 0 20px 20px 0;
-    width: 50%;
-  }
-  @media (min-width: $medium) {
-    width: 33.33%;
-  }
-  @media (min-width: $large) {
-    width: 25%;
   }
 
   &__img {
