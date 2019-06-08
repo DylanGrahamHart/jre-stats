@@ -8,12 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 public class App {
@@ -38,18 +39,18 @@ class MainController {
                 "part", "snippet,statistics"
         );
 
-        Map<String, Object> videos = YouTubeApiService.get("search",
-                "channelId", JRE_ID,
-                "part", "snippet",
-                "order", "date",
-                "maxResults", "50",
-                "type", "video"
-        );
+        Map<String, Object> videos = VideoService.getFirst50();
 
         mav.addObject("channel", channel);
         mav.addObject("videos", videos);
         return mav;
 	}
+
+    @GetMapping("/get-all")
+    @ResponseBody
+    public List<Map<String, Object>> all() {
+        return VideoService.getAll();
+    }
 
 }
 
@@ -63,7 +64,7 @@ class YouTubeApiService {
     public static Map<String, Object> get(String resource, String... params) {
         String url = API_HOST + resource + "?key=" + API_KEY + "&";
 
-        for (int i = 0; i < params.length - 1; i++) {
+        for (int i = 0; i < params.length - 1; i += 2) {
             url += params[i] + "=" + params[i+1] + "&";
         }
 
@@ -72,4 +73,46 @@ class YouTubeApiService {
 
 }
 
+class VideoService {
 
+    public static Map<String, Object> getFirst50() {
+
+        Map<String, Object> videos = YouTubeApiService.get("playlistItems",
+                "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
+                "part", "snippet",
+                "maxResults", "50"
+        );
+
+        return videos;
+    }
+
+    public static List<Map<String, Object>> getAll() {
+        List<Map<String, Object>> allVideos = new ArrayList<>();
+
+        Map<String, Object> videosChunk = YouTubeApiService.get("playlistItems",
+                "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
+                "part", "snippet",
+                "maxResults", "50"
+        );
+        allVideos.add(videosChunk);
+
+        Map<String, Object> pageInfo = (Map<String, Object>) videosChunk.get("pageInfo");
+        int totalResults = ((Integer) pageInfo.get("totalResults")).intValue();
+
+        String nextPageToken = (String) videosChunk.get("nextPageToken");
+        for (int i = 0; i < totalResults / 50; i++) {
+            videosChunk = YouTubeApiService.get("playlistItems",
+                    "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
+                    "part", "snippet",
+                    "maxResults", "50",
+                    "pageToken", nextPageToken
+            );
+
+            nextPageToken = (String) videosChunk.get("nextPageToken");
+            allVideos.add(videosChunk);
+        }
+
+        return allVideos;
+    }
+
+}
