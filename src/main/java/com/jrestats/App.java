@@ -20,6 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.PostConstruct;
 import java.nio.channels.Channel;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -39,18 +42,81 @@ class MainController {
     @Autowired
     YouTubeApiService apiService;
 
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+    private Logger logger = LoggerFactory.getLogger(MainController.class);
 
 	@GetMapping("/")
-	public ModelAndView home(@RequestParam(defaultValue = "0") int pageOffset) {
+	public ModelAndView home(
+	        @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "publishedAt") String sort
+    ) {
 	    ModelAndView mav = new ModelAndView("home");
 
-        mav.addObject("videos", apiService.getAllVideos().get(pageOffset));
+	    List<Map<String, Object>> allVideos = apiService.getAllVideos();
+
+        allVideos.sort((videoOne, videoTwo) -> {
+            int compareFlag = 0;
+
+            if ("publishedAt".equals(sort)) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                String dateStr1 = (String) ((Map<String, Object>) videoOne.get("snippet")).get("publishedAt");
+                String dateStr2 = (String) ((Map<String, Object>) videoTwo.get("snippet")).get("publishedAt");
+
+                try {
+                    long date1 = dateFormat.parse(dateStr1).getTime();
+                    long date2 = dateFormat.parse(dateStr2).getTime();
+
+                    if (date1 > date2) {
+                        compareFlag = -1;
+                    } else if (date2 > date1) {
+                        compareFlag = 1;
+                    }
+                } catch (ParseException e) {
+                    logger.error("Date parsing problem: " + e.getMessage());
+                }
+            }
+
+            if ("viewCount".equals(sort)) {
+                Integer viewCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("viewCount"));
+                Integer viewCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("viewCount"));
+
+                if (viewCount1.intValue() > viewCount2.intValue()) {
+                    compareFlag = -1;
+                } else if (viewCount2.intValue() > viewCount1.intValue()) {
+                    compareFlag = 1;
+                }
+            }
+
+            if ("likeCount".equals(sort)) {
+                Integer likeCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("likeCount"));
+                Integer likeCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("likeCount"));
+
+                if (likeCount1.intValue() > likeCount2.intValue()) {
+                    compareFlag = -1;
+                } else if (likeCount2.intValue() > likeCount1.intValue()) {
+                    compareFlag = 1;
+                }
+            }
+
+            if ("dislikeCount".equals(sort)) {
+                Integer dislikeCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("dislikeCount"));
+                Integer dislikeCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("dislikeCount"));
+
+                if (dislikeCount1.intValue() > dislikeCount2.intValue()) {
+                    compareFlag = -1;
+                } else if (dislikeCount2.intValue() > dislikeCount1.intValue()) {
+                    compareFlag = 1;
+                }
+            }
+
+            return compareFlag;
+        });
+
+        mav.addObject("videos", allVideos.subList(page*50, page*50+50));
         mav.addObject("channel", apiService.getChannel());
 
-        mav.addObject("prevPage", pageOffset > 1 ? pageOffset - 1 : null);
-        mav.addObject("prevHomePage", pageOffset == 1 ? pageOffset - 1 : null);
-        mav.addObject("nextPage", pageOffset < apiService.getAllVideos().size()-1 ? pageOffset + 1 : null);
+        mav.addObject("prevPage", page > 1 ? page - 1 : null);
+        mav.addObject("prevHomePage", page == 1 ? page - 1 : null);
+        mav.addObject("nextPage", page < apiService.getAllVideos().size()-1 ? page + 1 : null);
 
         return mav;
 	}
@@ -135,19 +201,22 @@ class YouTubeApiService {
                     "maxResults", "50"
             );
 
-            allRealVideos.add(realVideosChunk);
+            List<Map<String, Object>> realVideoItems = (List<Map<String, Object>>) realVideosChunk.get("items");
+            for (Map<String, Object> video : realVideoItems) {
+                allRealVideos.add(video);
+            }
         }
 
         return allRealVideos;
     }
 
-//    private void transformVideos(Map<String, Object> videosChunk) {
-//        List<Map<String, Object>> items = (List<Map<String, Object>>) videosChunk.get("items");
-//
-//        for (Map<String, Object> video : items) {
-//            Map<String, Object> snippet = (Map<String, Object>) video.get("snippet");
-//            Map<String, Object> statistics = (Map<String, Object>) video.get("statistics");
-//        }
-//    }
+    private void getSimplifiedVideo(Map<String, Object> videosChunk) {
+        List<Map<String, Object>> items = (List<Map<String, Object>>) videosChunk.get("items");
+
+        for (Map<String, Object> video : items) {
+            Map<String, Object> snippet = (Map<String, Object>) video.get("snippet");
+            Map<String, Object> statistics = (Map<String, Object>) video.get("statistics");
+        }
+    }
 
 }
