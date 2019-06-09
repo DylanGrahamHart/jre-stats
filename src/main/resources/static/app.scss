@@ -154,8 +154,11 @@ a {
   &__title {
     font-size: 14px;
     color: blue;
-    height: 2em;
     margin-bottom: 10px;
+
+    @media (min-width: $small) {
+      height: 2em;
+    }
   }
 
   &__stats {
