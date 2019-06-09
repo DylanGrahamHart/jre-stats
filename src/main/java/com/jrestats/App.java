@@ -1,9 +1,16 @@
 package com.jrestats;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -13,10 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.PostConstruct;
+import java.nio.channels.Channel;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
+@EnableCaching
 public class App {
 
 	public static void main(String[] args) {
@@ -28,28 +38,37 @@ public class App {
 @Controller
 class MainController {
 
-    private String JRE_ID = "UCzQUP1qoWDoEbmsQxvdjxgQ";
+    @Autowired
+    VideoService videoService;
+
+    @Autowired
+    ChannelService channelService;
+
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
 	@GetMapping("/")
 	public ModelAndView home() {
 	    ModelAndView mav = new ModelAndView("home");
 
-        Map<String, Object> channel = YouTubeApiService.get("channels",
-                "id", JRE_ID,
-                "part", "snippet,statistics"
-        );
+        Map<String, Object> channel = channelService.getChannel();
+        Map<String, Object> videos = videoService.getFirst50();
 
-        Map<String, Object> videos = VideoService.getFirst50();
+        logger.info("DERP" + channelService.getChannel());
+        logger.info("MERP" + channelService.getChannel());
 
         mav.addObject("channel", channel);
         mav.addObject("videos", videos);
         return mav;
 	}
 
-    @GetMapping("/get-all")
+    @GetMapping("/cache-test")
     @ResponseBody
-    public List<Map<String, Object>> all() {
-        return VideoService.getAll();
+    public String cacheTest() {
+        logger.info("DERP" + channelService.getChannel());
+        logger.info("MERP" + channelService.getChannel());
+        logger.info("LERP" + channelService.getChannel());
+
+        return "Cache test";
     }
 
 }
@@ -73,10 +92,39 @@ class YouTubeApiService {
 
 }
 
+@Service
+class ChannelService {
+
+    private String JRE_ID = "UCzQUP1qoWDoEbmsQxvdjxgQ";
+
+    @Cacheable("channel")
+    public Map<String, Object> getChannel() {
+        Map<String, Object> channel = YouTubeApiService.get("channels",
+                "id", JRE_ID,
+                "part", "snippet,statistics"
+        );
+
+        try {
+            long time = 3000L;
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return channel;
+    }
+
+    @PostConstruct
+    private void postConstruct() {
+        System.out.println("Nuclear missle");
+        // getChannel();
+    }
+}
+
+@Service
 class VideoService {
 
-    public static Map<String, Object> getFirst50() {
-
+    public Map<String, Object> getFirst50() {
         Map<String, Object> videos = YouTubeApiService.get("playlistItems",
                 "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                 "part", "snippet",
@@ -86,7 +134,8 @@ class VideoService {
         return videos;
     }
 
-    public static List<Map<String, Object>> getAll() {
+    @Cacheable("allVideos")
+    public List<Map<String, Object>> getAll() {
         List<Map<String, Object>> allVideos = new ArrayList<>();
 
         Map<String, Object> videosChunk = YouTubeApiService.get("playlistItems",
@@ -115,4 +164,8 @@ class VideoService {
         return allVideos;
     }
 
+    @PostConstruct
+    private void postConstruct() {
+        //  getAll();
+    }
 }
