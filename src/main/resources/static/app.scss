@@ -1,5 +1,6 @@
 // Colors
 $green: #090;
+$black: #333;
 
 // Breakpoints
 $small: 481px;
@@ -81,7 +82,7 @@ a {
   float: left;
 }
 #header {
-  background: #333;
+  background: $black;
   padding: 10px 0;
   margin-bottom: 20px;
 }
@@ -96,65 +97,57 @@ a {
   transform: skew(20deg);
 }
 .subs-views {
-  background: #eee;
-  padding: 20px;
-  border-radius: 2px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+
+  &__inner {
+    background: #eee;
+    padding: 20px;
+    border-radius: 2px;
+  }
 
   &__stat {
     &:first-child {
       margin-bottom: 10px;
     }
   }
-
 }
-
 .pagination {
   margin-bottom: 10px;
 
   &__prev,
   &__next {
-    // display: inline;
-    padding: 5px 10px;
-    border-radius: 10px;
-    background: blue;
-    letter-spacing: .04em;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: white;
+    a {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 10px;
+      letter-spacing: .1em;
+      background: teal;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: white;
+    }
+  }
+
+  &__next {
+    text-align: right;
   }
 }
-
 .video {
   margin-bottom: 20px;
 
-  &:hover {
+  &:hover &__title {
     text-decoration: underline;
   }
 
   &__img {
     margin-bottom: 5px;
     position: relative;
-
-    &:after {
-      transition: 1s;
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      content: '';
-      display: block;
-      opacity: 0;
-      background: black;
-    }
-
-    &:hover:after {
-      opacity: .5;
-    }
+    padding-top: 75%;
 
     img {
       max-width: 100%;
+      position: absolute;
+      top: 0;
     }
   }
 
@@ -162,5 +155,19 @@ a {
     font-size: 14px;
     color: blue;
     height: 2em;
+    margin-bottom: 10px;
+  }
+
+  &__stats {
+    color: $black;
+    font-size: 13px;
+  }
+
+  &__stats-likes {
+    color: green;
+  }
+
+  &__stats-dislikes {
+    color: #e00;
   }
 }

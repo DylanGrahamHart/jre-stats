@@ -232,49 +232,51 @@ a {
   transform: skew(20deg); }
 
 .subs-views {
-  background: #eee;
-  padding: 20px;
-  border-radius: 2px;
-  margin-bottom: 20px; }
+  margin-bottom: 10px; }
+  .subs-views__inner {
+    background: #eee;
+    padding: 20px;
+    border-radius: 2px; }
   .subs-views__stat:first-child {
     margin-bottom: 10px; }
 
 .pagination {
   margin-bottom: 10px; }
-  .pagination__prev, .pagination__next {
+  .pagination__prev a, .pagination__next a {
+    display: inline-block;
     padding: 5px 10px;
     border-radius: 10px;
-    background: blue;
-    letter-spacing: .04em;
+    letter-spacing: .1em;
+    background: teal;
     font-weight: bold;
     text-transform: uppercase;
     color: white; }
+  .pagination__next {
+    text-align: right; }
 
 .video {
   margin-bottom: 20px; }
-  .video:hover {
+  .video:hover .video__title {
     text-decoration: underline; }
   .video__img {
     margin-bottom: 5px;
-    position: relative; }
-    .video__img:after {
-      transition: 1s;
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      content: '';
-      display: block;
-      opacity: 0;
-      background: black; }
-    .video__img:hover:after {
-      opacity: .5; }
+    position: relative;
+    padding-top: 75%; }
     .video__img img {
-      max-width: 100%; }
+      max-width: 100%;
+      position: absolute;
+      top: 0; }
   .video__title {
     font-size: 14px;
     color: blue;
-    height: 2em; }
+    height: 2em;
+    margin-bottom: 10px; }
+  .video__stats {
+    color: #333;
+    font-size: 13px; }
+  .video__stats-likes {
+    color: green; }
+  .video__stats-dislikes {
+    color: #e00; }
 
 /*# sourceMappingURL=app.css.map */

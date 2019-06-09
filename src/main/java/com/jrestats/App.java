@@ -14,10 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -48,14 +45,21 @@ class MainController {
 	public ModelAndView home(@RequestParam(defaultValue = "0") int pageOffset) {
 	    ModelAndView mav = new ModelAndView("home");
 
-        mav.addObject("prevPage", pageOffset != 0 ? pageOffset - 1 : null);
-        mav.addObject("nextPage", pageOffset + 1);
-
-        mav.addObject("channel", apiService.getChannel());
         mav.addObject("videos", apiService.getAllVideos().get(pageOffset));
+        mav.addObject("channel", apiService.getChannel());
+
+        mav.addObject("prevPage", pageOffset > 1 ? pageOffset - 1 : null);
+        mav.addObject("prevHomePage", pageOffset == 1 ? pageOffset - 1 : null);
+        mav.addObject("nextPage", pageOffset < apiService.getAllVideos().size()-1 ? pageOffset + 1 : null);
 
         return mav;
 	}
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    protected String error() {
+        return "Error";
+    }
 }
 
 @Service
@@ -67,7 +71,7 @@ class YouTubeApiService {
     private String API_KEY = "AIzaSyDEEwGOwUujh6rA6gWQnQRUw2-Uyfx1OOI";
     private String API_HOST = "https://www.googleapis.com/youtube/v3/";
 
-    public Map<String, Object> get(String resource, String... params) {
+    private Map<String, Object> get(String resource, String... params) {
         String url = API_HOST + resource + "?key=" + API_KEY + "&";
 
         for (int i = 0; i < params.length - 1; i += 2) {
@@ -114,7 +118,36 @@ class YouTubeApiService {
             allVideos.add(videosChunk);
         }
 
-        return allVideos;
+        List<Map<String, Object>> allRealVideos = new ArrayList<>();
+        for (Map<String, Object> videosChunkDerp : allVideos) {
+            List<String> videoIdsChunk = new ArrayList<>();
+            List<Map<String, Object>> items = (List<Map<String, Object>>) videosChunkDerp.get("items");
+
+            for (Map<String, Object> video : items) {
+                Map<String, Object> snippet = (Map<String, Object>) video.get("snippet");
+                Map<String, Object> resourceId = (Map<String, Object>) snippet.get("resourceId");
+                videoIdsChunk.add((String) resourceId.get("videoId"));
+            }
+
+            Map<String, Object> realVideosChunk = get("videos",
+                    "id", String.join(",", videoIdsChunk),
+                    "part", "snippet,statistics",
+                    "maxResults", "50"
+            );
+
+            allRealVideos.add(realVideosChunk);
+        }
+
+        return allRealVideos;
     }
+
+//    private void transformVideos(Map<String, Object> videosChunk) {
+//        List<Map<String, Object>> items = (List<Map<String, Object>>) videosChunk.get("items");
+//
+//        for (Map<String, Object> video : items) {
+//            Map<String, Object> snippet = (Map<String, Object>) video.get("snippet");
+//            Map<String, Object> statistics = (Map<String, Object>) video.get("statistics");
+//        }
+//    }
 
 }
