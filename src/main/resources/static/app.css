@@ -25,7 +25,8 @@ a {
 
 [class*="col-"] {
   padding: 0 10px;
-  float: left; }
+  float: left;
+  min-height: 1px; }
 
 .col-1 {
   width: 8.33333%; }
@@ -237,6 +238,17 @@ a {
   margin-bottom: 20px; }
   .subs-views__stat:first-child {
     margin-bottom: 10px; }
+
+.pagination {
+  margin-bottom: 10px; }
+  .pagination__prev, .pagination__next {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background: blue;
+    letter-spacing: .04em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white; }
 
 .video {
   margin-bottom: 20px; }

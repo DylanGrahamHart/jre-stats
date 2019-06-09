@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -39,37 +40,34 @@ public class App {
 class MainController {
 
     @Autowired
-    VideoService videoService;
-
-    @Autowired
-    ChannelService channelService;
+    YouTubeApiService apiService;
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
 	@GetMapping("/")
-	public ModelAndView home() {
+	public ModelAndView home(@RequestParam(defaultValue = "0") int pageOffset) {
 	    ModelAndView mav = new ModelAndView("home");
 
-        Map<String, Object> channel = channelService.getChannel();
-        Map<String, Object> videos = videoService.getFirst50();
+        mav.addObject("prevPage", pageOffset != 0 ? pageOffset - 1 : null);
+        mav.addObject("nextPage", pageOffset + 1);
 
-        logger.info("DERP" + channelService.getChannel());
-        logger.info("MERP" + channelService.getChannel());
+        mav.addObject("channel", apiService.getChannel());
+        mav.addObject("videos", apiService.getAllVideos().get(pageOffset));
 
-        mav.addObject("channel", channel);
-        mav.addObject("videos", videos);
         return mav;
 	}
 }
 
+@Service
 class YouTubeApiService {
 
-    private static RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
 
-    private static String API_KEY = "AIzaSyDEEwGOwUujh6rA6gWQnQRUw2-Uyfx1OOI";
-    private static String API_HOST = "https://www.googleapis.com/youtube/v3/";
+    private String JRE_ID = "UCzQUP1qoWDoEbmsQxvdjxgQ";
+    private String API_KEY = "AIzaSyDEEwGOwUujh6rA6gWQnQRUw2-Uyfx1OOI";
+    private String API_HOST = "https://www.googleapis.com/youtube/v3/";
 
-    public static Map<String, Object> get(String resource, String... params) {
+    public Map<String, Object> get(String resource, String... params) {
         String url = API_HOST + resource + "?key=" + API_KEY + "&";
 
         for (int i = 0; i < params.length - 1; i += 2) {
@@ -79,51 +77,21 @@ class YouTubeApiService {
         return restTemplate.getForObject(url, Map.class);
     }
 
-}
-
-@Service
-class ChannelService {
-
-    private String JRE_ID = "UCzQUP1qoWDoEbmsQxvdjxgQ";
-
     @Cacheable("channel")
     public Map<String, Object> getChannel() {
-        Map<String, Object> channel = YouTubeApiService.get("channels",
+        Map<String, Object> channel = get("channels",
                 "id", JRE_ID,
                 "part", "snippet,statistics"
         );
 
         return channel;
     }
-}
-
-@Service
-class VideoService {
-
-    @Value("${app.useCache:true}")
-    private String useCache;
-
-    public Map<String, Object> getFirst50() {
-        Map<String, Object> videos;
-
-        if (Boolean.valueOf(Objects.toString(useCache))) {
-            videos = getAll().get(0);
-        } else {
-            videos = YouTubeApiService.get("playlistItems",
-                    "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
-                    "part", "snippet",
-                    "maxResults", "50"
-            );
-        }
-
-        return videos;
-    }
 
     @Cacheable("allVideos")
-    public List<Map<String, Object>> getAll() {
+    public List<Map<String, Object>> getAllVideos() {
         List<Map<String, Object>> allVideos = new ArrayList<>();
 
-        Map<String, Object> videosChunk = YouTubeApiService.get("playlistItems",
+        Map<String, Object> videosChunk = get("playlistItems",
                 "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                 "part", "snippet",
                 "maxResults", "50"
@@ -134,8 +102,8 @@ class VideoService {
         int totalResults = ((Integer) pageInfo.get("totalResults")).intValue();
 
         String nextPageToken = (String) videosChunk.get("nextPageToken");
-        for (int i = 0; i < totalResults / 50; i++) {
-            videosChunk = YouTubeApiService.get("playlistItems",
+        for (int i = 0; i < totalResults / 1000; i++) {
+            videosChunk = get("playlistItems",
                     "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                     "part", "snippet",
                     "maxResults", "50",
@@ -148,4 +116,5 @@ class VideoService {
 
         return allVideos;
     }
+
 }

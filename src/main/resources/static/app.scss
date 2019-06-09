@@ -36,6 +36,7 @@ a {
 [class*="col-"] {
   padding: 0 10px;
   float: left;
+  min-height: 1px;
 }
 @for $i from 1 through 12 {
   $width: percentage($i / 12);
@@ -106,6 +107,22 @@ a {
     }
   }
 
+}
+
+.pagination {
+  margin-bottom: 10px;
+
+  &__prev,
+  &__next {
+    // display: inline;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background: blue;
+    letter-spacing: .04em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+  }
 }
 
 .video {
