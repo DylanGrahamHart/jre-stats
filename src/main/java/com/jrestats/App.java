@@ -68,6 +68,10 @@ class MainController {
         logger.info("MERP" + channelService.getChannel());
         logger.info("LERP" + channelService.getChannel());
 
+        logger.info("DERP" + videoService.getAll());
+        logger.info("MERP" + videoService.getAll());
+        logger.info("LERP" + videoService.getAll());
+
         return "Cache test";
     }
 
@@ -104,20 +108,7 @@ class ChannelService {
                 "part", "snippet,statistics"
         );
 
-        try {
-            long time = 3000L;
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
-
         return channel;
-    }
-
-    @PostConstruct
-    private void postConstruct() {
-        System.out.println("Nuclear missle");
-        // getChannel();
     }
 }
 
@@ -149,7 +140,7 @@ class VideoService {
         int totalResults = ((Integer) pageInfo.get("totalResults")).intValue();
 
         String nextPageToken = (String) videosChunk.get("nextPageToken");
-        for (int i = 0; i < totalResults / 50; i++) {
+        for (int i = 0; i < totalResults / 500; i++) {
             videosChunk = YouTubeApiService.get("playlistItems",
                     "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                     "part", "snippet",
@@ -161,11 +152,6 @@ class VideoService {
             allVideos.add(videosChunk);
         }
 
-        return allVideos;
-    }
-
-    @PostConstruct
-    private void postConstruct() {
-        //  getAll();
+        return new ArrayList<>();
     }
 }
