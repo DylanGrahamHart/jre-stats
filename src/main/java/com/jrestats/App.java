@@ -54,61 +54,7 @@ class MainController {
 	    List<Map<String, Object>> allVideos = apiService.getAllVideos();
 
         allVideos.sort((videoOne, videoTwo) -> {
-            int compareFlag = 0;
-
-            if ("publishedAt".equals(sort)) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                String dateStr1 = (String) ((Map<String, Object>) videoOne.get("snippet")).get("publishedAt");
-                String dateStr2 = (String) ((Map<String, Object>) videoTwo.get("snippet")).get("publishedAt");
-
-                try {
-                    long date1 = dateFormat.parse(dateStr1).getTime();
-                    long date2 = dateFormat.parse(dateStr2).getTime();
-
-                    if (date1 > date2) {
-                        compareFlag = -1;
-                    } else if (date2 > date1) {
-                        compareFlag = 1;
-                    }
-                } catch (ParseException e) {
-                    logger.error("Date parsing problem: " + e.getMessage());
-                }
-            }
-
-            if ("viewCount".equals(sort)) {
-                Integer viewCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("viewCount"));
-                Integer viewCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("viewCount"));
-
-                if (viewCount1.intValue() > viewCount2.intValue()) {
-                    compareFlag = -1;
-                } else if (viewCount2.intValue() > viewCount1.intValue()) {
-                    compareFlag = 1;
-                }
-            }
-
-            if ("likeCount".equals(sort)) {
-                Integer likeCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("likeCount"));
-                Integer likeCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("likeCount"));
-
-                if (likeCount1.intValue() > likeCount2.intValue()) {
-                    compareFlag = -1;
-                } else if (likeCount2.intValue() > likeCount1.intValue()) {
-                    compareFlag = 1;
-                }
-            }
-
-            if ("dislikeCount".equals(sort)) {
-                Integer dislikeCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("dislikeCount"));
-                Integer dislikeCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("dislikeCount"));
-
-                if (dislikeCount1.intValue() > dislikeCount2.intValue()) {
-                    compareFlag = -1;
-                } else if (dislikeCount2.intValue() > dislikeCount1.intValue()) {
-                    compareFlag = 1;
-                }
-            }
-
-            return compareFlag;
+            return sortVideos(videoOne, videoTwo, sort);
         });
 
         mav.addObject("videos", allVideos.subList(page*50, page*50+50));
@@ -120,6 +66,84 @@ class MainController {
 
         return mav;
 	}
+
+	private int sortVideos(Map<String, Object> videoOne, Map<String, Object> videoTwo, String sort) {
+        int compareFlag = 0;
+
+        int likeCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("likeCount")).intValue();
+        int likeCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("likeCount")).intValue();
+        int dislikeCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("dislikeCount")).intValue();
+        int dislikeCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("dislikeCount")).intValue();
+        int viewCount1 = Integer.valueOf((String) ((Map<String, Object>) videoOne.get("statistics")).get("viewCount")).intValue();
+        int viewCount2 = Integer.valueOf((String) ((Map<String, Object>) videoTwo.get("statistics")).get("viewCount")).intValue();
+
+        if ("publishedAt".equals(sort)) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            String dateStr1 = (String) ((Map<String, Object>) videoOne.get("snippet")).get("publishedAt");
+            String dateStr2 = (String) ((Map<String, Object>) videoTwo.get("snippet")).get("publishedAt");
+
+            try {
+                long date1 = dateFormat.parse(dateStr1).getTime();
+                long date2 = dateFormat.parse(dateStr2).getTime();
+
+                if (date1 > date2) {
+                    compareFlag = -1;
+                } else if (date2 > date1) {
+                    compareFlag = 1;
+                }
+            } catch (ParseException e) {
+                logger.error("Date parsing problem: " + e.getMessage());
+            }
+        }
+
+        if ("viewCount".equals(sort)) {
+            if (viewCount1 > viewCount2) {
+                compareFlag = -1;
+            } else if (viewCount2 > viewCount1) {
+                compareFlag = 1;
+            }
+        }
+
+        if ("likeCount".equals(sort)) {
+            if (likeCount1 > likeCount2) {
+                compareFlag = -1;
+            } else if (likeCount2 > likeCount1) {
+                compareFlag = 1;
+            }
+        }
+
+        if ("dislikeCount".equals(sort)) {
+            if (dislikeCount1 > dislikeCount2) {
+                compareFlag = -1;
+            } else if (dislikeCount2 > dislikeCount1) {
+                compareFlag = 1;
+            }
+        }
+
+        if ("likesPerView".equals(sort)) {
+            double likesPerView1 = (double) likeCount1 / (double) viewCount1;
+            double likesPerView2 = (double) likeCount2 / (double) viewCount2;
+
+            if (likesPerView1 > likesPerView2) {
+                compareFlag = -1;
+            } else if (likesPerView1 < likesPerView2) {
+                compareFlag = 1;
+            }
+        }
+
+        if ("dislikesPerView".equals(sort)) {
+            double dislikesPerView1 = (double) dislikeCount1 / (double) viewCount1;
+            double dislikesPerView2 = (double) dislikeCount2 / (double) viewCount2;
+
+            if (dislikesPerView1 > dislikesPerView2) {
+                compareFlag = -1;
+            } else if (dislikesPerView1 < dislikesPerView2) {
+                compareFlag = 1;
+            }
+        }
+
+        return compareFlag;
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
