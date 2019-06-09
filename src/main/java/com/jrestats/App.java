@@ -60,21 +60,6 @@ class MainController {
         mav.addObject("videos", videos);
         return mav;
 	}
-
-    @GetMapping("/cache-test")
-    @ResponseBody
-    public String cacheTest() {
-        logger.info("DERP" + channelService.getChannel());
-        logger.info("MERP" + channelService.getChannel());
-        logger.info("LERP" + channelService.getChannel());
-
-        logger.info("DERP" + videoService.getAll());
-        logger.info("MERP" + videoService.getAll());
-        logger.info("LERP" + videoService.getAll());
-
-        return "Cache test";
-    }
-
 }
 
 class YouTubeApiService {
@@ -115,12 +100,21 @@ class ChannelService {
 @Service
 class VideoService {
 
+    @Value("${app.useCache:true}")
+    private String useCache;
+
     public Map<String, Object> getFirst50() {
-        Map<String, Object> videos = YouTubeApiService.get("playlistItems",
-                "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
-                "part", "snippet",
-                "maxResults", "50"
-        );
+        Map<String, Object> videos;
+
+        if (Boolean.valueOf(Objects.toString(useCache))) {
+            videos = getAll().get(0);
+        } else {
+            videos = YouTubeApiService.get("playlistItems",
+                    "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
+                    "part", "snippet",
+                    "maxResults", "50"
+            );
+        }
 
         return videos;
     }
@@ -140,7 +134,7 @@ class VideoService {
         int totalResults = ((Integer) pageInfo.get("totalResults")).intValue();
 
         String nextPageToken = (String) videosChunk.get("nextPageToken");
-        for (int i = 0; i < totalResults / 500; i++) {
+        for (int i = 0; i < totalResults / 50; i++) {
             videosChunk = YouTubeApiService.get("playlistItems",
                     "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                     "part", "snippet",
@@ -152,6 +146,6 @@ class VideoService {
             allVideos.add(videosChunk);
         }
 
-        return new ArrayList<>();
+        return allVideos;
     }
 }
