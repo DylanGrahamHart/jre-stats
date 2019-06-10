@@ -49,11 +49,11 @@
   <div class="pagination container">
     <div class="row">
       <div class="col-6 pagination__prev">
-        {{# prevPage }}<a href="?page={{ prevPage }}">Prev</a>{{/ prevPage }}
-        {{# prevHomePage }}<a href="/">Prev</a>{{/ prevHomePage }}
+        {{# pagination.prev }}<a href="?page={{ pagination.prev }}">Prev</a>{{/ pagination.prev }}
+        {{# pagination.home }}<a href="/">Prev</a>{{/ pagination.home }}
       </div>
       <div class="col-6 pagination__next">
-        {{# nextPage }}<a href="?page={{ nextPage }}">Next</a>{{/ nextPage }}
+        {{# pagination.next }}<a href="?page={{ pagination.next }}">Next</a>{{/ pagination.next }}
       </div>
     </div>
   </div>
@@ -63,24 +63,24 @@
       {{# videos }}
         <div class="video col-12 col-xs-6 col-md-4 col-lg-3">
           <a href="https://www.youtube.com/watch?v={{ id }}" target="_blank">
-            <div class="video__img"><img src="{{ snippet.thumbnails.high.url }}"></div>
-            <div class="video__title">{{{ snippet.title }}}</div>
+            <div class="video__img"><img src="{{ imgSrc }}"></div>
+            <div class="video__title">{{{ title }}}</div>
 
             <div class="video__stats">
               <span class="video__stats-views">
-                <span class="js-format-number">{{ statistics.viewCount }}</span> views
+                <span class="js-format-number">{{ viewCount }}</span> views
               </span>
 
               &bull;
 
               <span class="video__stats-likes">
-                <span class="js-format-number">{{ statistics.likeCount }}</span> likes
+                <span class="js-format-number">{{ likeCount }}</span> likes
               </span>
 
               &bull;
 
               <span class="video__stats-dislikes">
-                <span class="js-format-number">{{ statistics.dislikeCount }}</span> dislikes
+                <span class="js-format-number">{{ dislikeCount }}</span> dislikes
               </span>
             </div>
           </a>
