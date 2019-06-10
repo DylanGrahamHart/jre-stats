@@ -32,7 +32,7 @@ public class VideoService {
         int totalResults = DataUtil.getInteger("pageInfo.totalResults", playlistItems);
         String nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
 
-        for (int i = 0; i < totalResults / 1000; i++) {
+        for (int i = 0; i < totalResults / 50; i++) {
             playlistItems = apiService.get("playlistItems",
                     "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                     "part", "snippet",
