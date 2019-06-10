@@ -48,7 +48,7 @@
 
   <div class="controls container">
     <div class="row">
-      <div class="col-6 col-sm-1 controls__prev">
+      <div class="col-6 col-sm-3 col-md-1 controls__prev">
         <a
           {{# pagination.prev }} href="?page={{ pagination.prev }}" {{/ pagination.prev }}
           {{# pagination.home }} href="/" {{/ pagination.home }}
@@ -57,7 +57,7 @@
         </a>
       </div>
 
-      <div class="col-6 col-sm-1 controls__next">
+      <div class="col-6 col-sm-3 col-md-1 controls__next">
         <a
           {{# pagination.next }} href="?page={{ pagination.next }}" {{/ pagination.next }}
         >
@@ -66,7 +66,7 @@
 
       </div>
 
-      <div class="col-12 col-sm-10 controls__sort">
+      <div class="col-12 col-sm-6 col-md-10 controls__sort">
         <select onchange="jreStats.sort()" name="sort">
           <option>Sort By</option>
           <option value="publishedAt">Date added (newest)</option>
