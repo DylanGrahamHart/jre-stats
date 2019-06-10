@@ -50,7 +50,7 @@ a {
   $width: percentage($i / 12);
 
   @media (min-width: $small) {
-    .col-xs-#{$i} {
+    .col-sm-#{$i} {
       width: $width;
     }
   }
@@ -111,7 +111,7 @@ a {
     }
   }
 }
-.pagination {
+.controls {
   margin-bottom: 10px;
 
   &__prev,
@@ -130,6 +130,15 @@ a {
 
   &__next {
     text-align: right;
+  }
+
+  &__sort {
+    margin-top: 10px;
+
+    @media (min-width: $small)  {
+      margin-top: 0;
+      text-align: right;
+    }
   }
 }
 .video {

@@ -46,14 +46,42 @@
     </div>
   </div>
 
-  <div class="pagination container">
+  <div class="controls container">
     <div class="row">
-      <div class="col-6 pagination__prev">
-        {{# pagination.prev }}<a href="?page={{ pagination.prev }}">Prev</a>{{/ pagination.prev }}
-        {{# pagination.home }}<a href="/">Prev</a>{{/ pagination.home }}
+      <div class="col-6 col-sm-1 controls__prev">
+        <a
+          {{# pagination.prev }} href="?page={{ pagination.prev }}" {{/ pagination.prev }}
+          {{# pagination.home }} href="/" {{/ pagination.home }}
+        >
+          Prev
+        </a>
       </div>
-      <div class="col-6 pagination__next">
-        {{# pagination.next }}<a href="?page={{ pagination.next }}">Next</a>{{/ pagination.next }}
+
+      <div class="col-6 col-sm-1 controls__next">
+        <a
+          {{# pagination.next }} href="?page={{ pagination.next }}" {{/ pagination.next }}
+        >
+          Next
+        </a>
+
+      </div>
+
+      <div class="col-12 col-sm-10 controls__sort">
+        <select onchange="jreStats.sort()" name="sort">
+          <option>Sort By</option>
+          <option value="publishedAt">Date added (newest)</option>
+          <option value="-publishedAt">Date added (oldest)</option>
+          <option value="viewCount">Views (most)</option>
+          <option value="-viewCount">Views (least)</option>
+          <option value="likeCount">Likes (most)</option>
+          <option value="-likeCount">Likes (least)</option>
+          <option value="dislikeCount">Dislikes (most)</option>
+          <option value="-dislikeCount">Dislikes (least)</option>
+          <option value="likesPerView">Likes per view (most)</option>
+          <option value="-likesPerView">Likes per view (least)</option>
+          <option value="dislikesPerView">Dislikes per view (most)</option>
+          <option value="-dislikesPerView">Dislikes per view (least)</option>
+        </select>
       </div>
     </div>
   </div>
@@ -61,7 +89,7 @@
   <div class="videos container">
     <div class="row">
       {{# videos }}
-        <div class="video col-12 col-xs-6 col-md-4 col-lg-3">
+        <div class="video col-12 col-sm-6 col-md-4 col-lg-3">
           <a href="https://www.youtube.com/watch?v={{ id }}" target="_blank">
             <div class="video__img"><img src="{{ imgSrc }}"></div>
             <div class="video__title">{{{ title }}}</div>

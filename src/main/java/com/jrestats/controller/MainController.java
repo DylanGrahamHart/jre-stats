@@ -32,12 +32,13 @@ public class MainController {
     @GetMapping("/")
     public ModelAndView home(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "publishedAt") String sort
+            @RequestParam(defaultValue = "publishedAt") String sort,
+            @RequestParam(defaultValue = "false") boolean reverse
     ) {
         ModelAndView mav = new ModelAndView("home");
 
         List<Map<String, String>> videos = videoService.getAllVideos();
-        videos.sort((video1, video2) -> sortVideos(sort, video1, video2));
+        videos.sort((video1, video2) -> sortVideos(sort, reverse, video1, video2));
         mav.addObject("videos", videos.subList(page * 50, page * 50 + 50));
 
         mav.addObject("channel", channelService.getChannel());
@@ -56,7 +57,8 @@ public class MainController {
         return pagination;
     }
 
-    private int sortVideos(String sort, Map<String, String> video1, Map<String, String> video2) {
+    private int sortVideos(String sort, boolean reverse,
+                           Map<String, String> video1, Map<String, String> video2) {
         int compareFlag = 0;
 
         int likeCount1 = Integer.valueOf(video1.get("likeCount")).intValue();
@@ -131,7 +133,7 @@ public class MainController {
             }
         }
 
-        return compareFlag;
+        return compareFlag * (reverse ? -1 : 1);
     }
 
     @ExceptionHandler(Exception.class)

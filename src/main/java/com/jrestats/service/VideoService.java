@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +29,8 @@ public class VideoService {
         );
         allPlaylistItems.add(playlistItems);
 
-        int totalResults = DataUtil.getIntegerFromMap("pageInfo.totalResults", playlistItems);
-        String nextPageToken = DataUtil.getStringFromMap("nextPageToken", playlistItems);
+        int totalResults = DataUtil.getInteger("pageInfo.totalResults", playlistItems);
+        String nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
 
         for (int i = 0; i < totalResults / 1000; i++) {
             playlistItems = apiService.get("playlistItems",
@@ -38,7 +40,7 @@ public class VideoService {
                     "pageToken", nextPageToken
             );
 
-            nextPageToken = DataUtil.getStringFromMap("nextPageToken", playlistItems);
+            nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
             allPlaylistItems.add(playlistItems);
         }
 
@@ -48,7 +50,7 @@ public class VideoService {
 
             for (Map<String, Object> video : DataUtil.getList("items", playlistItem)) {
                 videoIdsChunk.add(
-                        DataUtil.getStringFromMap("snippet.resourceId.videoId", video)
+                        DataUtil.getString("snippet.resourceId.videoId", video)
                 );
             }
 
@@ -61,13 +63,13 @@ public class VideoService {
             for (Map<String, Object> video : DataUtil.getList("items", videos)) {
                 Map<String, String> simpleVideo = new HashMap<>();
 
-                String id = DataUtil.getStringFromMap("id", video);
-                String imgSrc = DataUtil.getStringFromMap("snippet.thumbnails.high.url", video);
-                String title = DataUtil.getStringFromMap("snippet.title", video);
-                String likeCount = DataUtil.getStringFromMap("statistics.likeCount", video);
-                String dislikeCount = DataUtil.getStringFromMap("statistics.dislikeCount", video);
-                String viewCount = DataUtil.getStringFromMap("statistics.viewCount", video);
-                String publishedAt = DataUtil.getStringFromMap("snippet.publishedAt", video);
+                String id = DataUtil.getString("id", video);
+                String imgSrc = DataUtil.getString("snippet.thumbnails.high.url", video);
+                String title = DataUtil.getString("snippet.title", video);
+                String likeCount = DataUtil.getString("statistics.likeCount", video);
+                String dislikeCount = DataUtil.getString("statistics.dislikeCount", video);
+                String viewCount = DataUtil.getString("statistics.viewCount", video);
+                String publishedAt = DataUtil.getString("snippet.publishedAt", video);
 
                 simpleVideo.put("id", id);
                 simpleVideo.put("imgSrc", imgSrc);

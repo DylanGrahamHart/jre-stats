@@ -1,7 +1,17 @@
-jreStats();
-
-function jreStats() {
+window.jreStats = (function() {
   formatNumbers();
+
+  return {
+    sort: sort
+  };
+
+  function sort() {
+    var sort = $('[name="sort"]')[0].value;
+    var reverse = sort.indexOf('-') !== -1;
+    sort = reverse ? sort.substr(1, sort.length) : sort;
+
+    location.href = '/?sort=' + sort + '&reverse=' + reverse;
+  }
 
   function formatNumbers() {
     var nodes = $('.js-format-number');
@@ -22,4 +32,4 @@ function jreStats() {
   function $(selector) {
     return window.document.querySelectorAll(selector)
   }
-}
+})();

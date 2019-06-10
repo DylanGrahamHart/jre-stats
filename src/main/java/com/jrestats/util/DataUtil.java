@@ -13,7 +13,7 @@ public class DataUtil {
         return (List<Map<String, Object>>) map.get(key);
     }
 
-    public static String getStringFromMap(String keyPath, Map<String, Object> map) {
+    public static String getString(String keyPath, Map<String, Object> map) {
         String value = null;
 
         Map<String, Object> currentMap = map;
@@ -28,7 +28,7 @@ public class DataUtil {
         return value;
     }
 
-    public static Integer getIntegerFromMap(String keyPath, Map<String, Object> map) {
+    public static Integer getInteger(String keyPath, Map<String, Object> map) {
         Integer value = null;
 
         Map<String, Object> currentMap = map;
