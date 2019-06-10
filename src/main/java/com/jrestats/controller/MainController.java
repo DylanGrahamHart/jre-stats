@@ -1,8 +1,7 @@
-package com.jrestats;
+package com.jrestats.controller;
 
 import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoService;
-import com.jrestats.service.YouTubeApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,7 @@ public class MainController {
         List<Map<String, String>> videos = videoService.getAllVideos();
         videos.sort((video1, video2) -> sortVideos(sort, video1, video2));
         mav.addObject("videos", videos.subList(page * 50, page * 50 + 50));
-        
+
         mav.addObject("channel", channelService.getChannel());
         mav.addObject("pagination", getPagination(page, videos.size()));
 
@@ -53,7 +51,7 @@ public class MainController {
 
         pagination.put("prev", page > 1 ? page - 1 : null);
         pagination.put("home", page == 1 ? page - 1 : null);
-        pagination.put("next", page < videoSize - 1 ? page + 1 : null);
+        pagination.put("next", page * 50 < videoSize - 50 ? page + 1 : null);
 
         return pagination;
     }

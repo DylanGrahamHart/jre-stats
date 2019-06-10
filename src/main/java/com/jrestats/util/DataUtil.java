@@ -1,13 +1,9 @@
-package com.jrestats;
+package com.jrestats.util;
 
 import java.util.List;
 import java.util.Map;
 
-public class Util {
-
-    public static Object getObject(String key, Map<String, Object> map) {
-        return (Object) map.get(key);
-    }
+public class DataUtil {
 
     public static Map<String, Object> getMap(String key, Map<String, Object> map) {
         return (Map<String, Object>) map.get(key);
@@ -26,6 +22,21 @@ public class Util {
                 currentMap = getMap(key, currentMap);
             } catch (ClassCastException e) {
                 value = (String) currentMap.get(key);
+            }
+        }
+
+        return value;
+    }
+
+    public static Integer getIntegerFromMap(String keyPath, Map<String, Object> map) {
+        Integer value = null;
+
+        Map<String, Object> currentMap = map;
+        for (String key : keyPath.split("\\.")) {
+            try {
+                currentMap = getMap(key, currentMap);
+            } catch (ClassCastException e) {
+                value = (Integer) currentMap.get(key);
             }
         }
 

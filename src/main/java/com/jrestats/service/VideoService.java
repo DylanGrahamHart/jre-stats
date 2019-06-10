@@ -1,6 +1,6 @@
 package com.jrestats.service;
 
-import com.jrestats.Util;
+import com.jrestats.util.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -27,10 +27,10 @@ public class VideoService {
         );
         allPlaylistItems.add(playlistItems);
 
-        // int totalResults = ((Integer) Util.getStringFromMap("pageInfo.totalResults", playlistItems)).intValue();
-        String nextPageToken = Util.getStringFromMap("nextPageToken", playlistItems);
+        int totalResults = DataUtil.getIntegerFromMap("pageInfo.totalResults", playlistItems);
+        String nextPageToken = DataUtil.getStringFromMap("nextPageToken", playlistItems);
 
-        for (int i = 0; i < 2000 / 1000; i++) {
+        for (int i = 0; i < totalResults / 1000; i++) {
             playlistItems = apiService.get("playlistItems",
                     "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                     "part", "snippet",
@@ -38,7 +38,7 @@ public class VideoService {
                     "pageToken", nextPageToken
             );
 
-            nextPageToken = Util.getStringFromMap("nextPageToken", playlistItems);
+            nextPageToken = DataUtil.getStringFromMap("nextPageToken", playlistItems);
             allPlaylistItems.add(playlistItems);
         }
 
@@ -46,9 +46,9 @@ public class VideoService {
         for (Map<String, Object> playlistItem : allPlaylistItems) {
             List<String> videoIdsChunk = new ArrayList<>();
 
-            for (Map<String, Object> video : Util.getList("items", playlistItem)) {
+            for (Map<String, Object> video : DataUtil.getList("items", playlistItem)) {
                 videoIdsChunk.add(
-                        Util.getStringFromMap("snippet.resourceId.videoId", video)
+                        DataUtil.getStringFromMap("snippet.resourceId.videoId", video)
                 );
             }
 
@@ -58,16 +58,16 @@ public class VideoService {
                     "maxResults", "50"
             );
 
-            for (Map<String, Object> video : Util.getList("items", videos)) {
+            for (Map<String, Object> video : DataUtil.getList("items", videos)) {
                 Map<String, String> simpleVideo = new HashMap<>();
 
-                String id = Util.getStringFromMap("id", video);
-                String imgSrc = Util.getStringFromMap("snippet.thumbnails.high.url", video);
-                String title = Util.getStringFromMap("snippet.title", video);
-                String likeCount = Util.getStringFromMap("statistics.likeCount", video);
-                String dislikeCount = Util.getStringFromMap("statistics.dislikeCount", video);
-                String viewCount = Util.getStringFromMap("statistics.viewCount", video);
-                String publishedAt = Util.getStringFromMap("snippet.publishedAt", video);
+                String id = DataUtil.getStringFromMap("id", video);
+                String imgSrc = DataUtil.getStringFromMap("snippet.thumbnails.high.url", video);
+                String title = DataUtil.getStringFromMap("snippet.title", video);
+                String likeCount = DataUtil.getStringFromMap("statistics.likeCount", video);
+                String dislikeCount = DataUtil.getStringFromMap("statistics.dislikeCount", video);
+                String viewCount = DataUtil.getStringFromMap("statistics.viewCount", video);
+                String publishedAt = DataUtil.getStringFromMap("snippet.publishedAt", video);
 
                 simpleVideo.put("id", id);
                 simpleVideo.put("imgSrc", imgSrc);
