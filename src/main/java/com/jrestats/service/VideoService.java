@@ -1,6 +1,9 @@
 package com.jrestats.service;
 
+import com.jrestats.controller.MainController;
 import com.jrestats.util.DataUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ import java.util.Map;
 
 @Service
 public class VideoService {
+
+    private Logger logger = LoggerFactory.getLogger(VideoService.class);
 
     @Autowired
     YouTubeApiService apiService;
