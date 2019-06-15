@@ -18,66 +18,60 @@ public class VideoService {
     @Autowired
     YouTubeApiService apiService;
 
-    @Cacheable("allVideos")
-    public List<Map<String, String>> getAllVideos() {
-        List<Map<String, Object>> allPlaylistItems = new ArrayList<>();
-
-        Map<String, Object> playlistItems = apiService.get("playlistItems",
+    private Map<String, Object> getPlaylistItems(String nextPageToken) {
+        return apiService.get("playlistItems",
                 "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
                 "part", "snippet",
-                "maxResults", "50"
+                "maxResults", "50",
+                "pageToken", nextPageToken
         );
+    }
+
+    private List<Map<String, Object>> getAllPlaylistItems() {
+        List<Map<String, Object>> allPlaylistItems = new ArrayList<>();
+
+        Map<String, Object> playlistItems = getPlaylistItems(null);
         allPlaylistItems.add(playlistItems);
 
         int totalResults = DataUtil.getInteger("pageInfo.totalResults", playlistItems);
         String nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
 
-        for (int i = 0; i < totalResults / 50; i++) {
-            playlistItems = apiService.get("playlistItems",
-                    "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
-                    "part", "snippet",
-                    "maxResults", "50",
-                    "pageToken", nextPageToken
-            );
-
+        for (int i = 0; i < totalResults / 1000; i++) {
+            playlistItems = getPlaylistItems(nextPageToken);
             nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
             allPlaylistItems.add(playlistItems);
         }
 
-        List<Map<String, String>> allVideos = new ArrayList<>();
-        for (Map<String, Object> playlistItem : allPlaylistItems) {
-            List<String> videoIdsChunk = new ArrayList<>();
+        return allPlaylistItems;
+    }
 
-            for (Map<String, Object> video : DataUtil.getList("items", playlistItem)) {
-                videoIdsChunk.add(
-                        DataUtil.getString("snippet.resourceId.videoId", video)
-                );
+    @Cacheable("allVideos")
+    public List<Map<String, String>> getAllVideos() {
+        List<Map<String, String>> allVideos = new ArrayList<>();
+
+        for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
+            List<String> videoIds = new ArrayList<>();
+
+            for (Map<String, Object> playlistItemItem : DataUtil.getList("items", playlistItem)) {
+                videoIds.add(DataUtil.getString("snippet.resourceId.videoId", playlistItemItem));
             }
 
             Map<String, Object> videos = apiService.get("videos",
-                    "id", String.join(",", videoIdsChunk),
+                    "id", String.join(",", videoIds),
                     "part", "snippet,statistics",
                     "maxResults", "50"
             );
 
-            for (Map<String, Object> video : DataUtil.getList("items", videos)) {
+            for (Map<String, Object> videoItem : DataUtil.getList("items", videos)) {
                 Map<String, String> simpleVideo = new HashMap<>();
 
-                String id = DataUtil.getString("id", video);
-                String imgSrc = DataUtil.getString("snippet.thumbnails.high.url", video);
-                String title = DataUtil.getString("snippet.title", video);
-                String likeCount = DataUtil.getString("statistics.likeCount", video);
-                String dislikeCount = DataUtil.getString("statistics.dislikeCount", video);
-                String viewCount = DataUtil.getString("statistics.viewCount", video);
-                String publishedAt = DataUtil.getString("snippet.publishedAt", video);
-
-                simpleVideo.put("id", id);
-                simpleVideo.put("imgSrc", imgSrc);
-                simpleVideo.put("title", title);
-                simpleVideo.put("likeCount", likeCount);
-                simpleVideo.put("dislikeCount", dislikeCount);
-                simpleVideo.put("viewCount", viewCount);
-                simpleVideo.put("publishedAt", publishedAt);
+                simpleVideo.put("id", DataUtil.getString("id", videoItem));
+                simpleVideo.put("imgSrc", DataUtil.getString("snippet.thumbnails.high.url", videoItem));
+                simpleVideo.put("title", DataUtil.getString("snippet.title", videoItem));
+                simpleVideo.put("likeCount", DataUtil.getString("statistics.likeCount", videoItem));
+                simpleVideo.put("dislikeCount", DataUtil.getString("statistics.dislikeCount", videoItem));
+                simpleVideo.put("viewCount", DataUtil.getString("statistics.viewCount", videoItem));
+                simpleVideo.put("publishedAt", DataUtil.getString("snippet.publishedAt", videoItem));
 
                 allVideos.add(simpleVideo);
             }

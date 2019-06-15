@@ -17,7 +17,8 @@ public class YouTubeApiService {
         String url = API_HOST + resource + "?key=" + API_KEY + "&";
 
         for (int i = 0; i < params.length - 1; i += 2) {
-            url += params[i] + "=" + params[i+1] + "&";
+            if (params[i] != null && params[i+1] != null)
+                url += params[i] + "=" + params[i+1] + "&";
         }
 
         return restTemplate.getForObject(url, Map.class);
