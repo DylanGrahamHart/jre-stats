@@ -1,17 +1,17 @@
 const path = require('path');
 
 module.exports = {
+
+  entry: './src/main/resources/static/main.js',
   mode: 'none',
-  entry: './src/main.js',
   devtool: 'source-map',
+  watch: true,
+
   output: {
-    filename: 'app.js',
-    path: path.resolve(__dirname, 'public')
+    filename: 'react-app.js',
+    path: path.resolve(__dirname, 'src/main/resources/static')
   },
-  devServer: {
-    contentBase: './public',
-    liveReload: false
-  },
+
   module: {
     rules: [
       {

@@ -15,3 +15,5 @@ node_modules/
 .DS_Store
 src/main/resources/static/app.css
 src/main/resources/static/app.css.map
+src/main/resources/static/react-app.css
+src/main/resources/static/react-app.css.map
