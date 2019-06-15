@@ -5,6 +5,7 @@ import com.jrestats.util.DataUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class VideoService {
 
     @Autowired
     YouTubeApiService apiService;
+
+    @Value("${jrestats.pagesOfVideosToGet:50}")
+    Integer pagesOfVideosToGet;
 
     private Map<String, Object> getPlaylistItems(String nextPageToken) {
         return apiService.get("playlistItems",
@@ -41,7 +45,7 @@ public class VideoService {
         int totalResults = DataUtil.getInteger("pageInfo.totalResults", playlistItems);
         String nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
 
-        for (int i = 0; i < totalResults / 1000; i++) {
+        for (int i = 0; i < totalResults / pagesOfVideosToGet; i++) {
             playlistItems = getPlaylistItems(nextPageToken);
             nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
             allPlaylistItems.add(playlistItems);
