@@ -285,18 +285,12 @@ function (_React$Component4) {
           title: video.snippet.title,
           url: "https://www.youtube.com/watch?v=".concat(video.id),
           imgSrc: video.snippet.thumbnails.high.url,
-          viewCount: {
-            raw: Number(video.statistics.viewCount),
-            pretty: _this3.formatNumber(video.statistics.viewCount)
-          },
-          likeCount: {
-            raw: Number(video.statistics.likeCount),
-            pretty: _this3.formatNumber(video.statistics.likeCount)
-          },
-          dislikeCount: {
-            raw: Number(video.statistics.dislikeCount),
-            pretty: _this3.formatNumber(video.statistics.dislikeCount)
-          }
+          viewCount: Number(video.statistics.viewCount),
+          viewCountPretty: _this3.formatNumber(video.statistics.viewCount),
+          likeCount: Number(video.statistics.likeCount),
+          likeCountPretty: _this3.formatNumber(video.statistics.likeCount),
+          dislikeCount: Number(video.statistics.dislikeCount),
+          dislikeCountPretty: _this3.formatNumber(video.statistics.dislikeCount)
         };
       });
     }
@@ -315,11 +309,13 @@ function (_React$Component4) {
     key: "getVideos",
     value: function getVideos() {
       var videos = this.state.videos;
-      var urlParams = this.getUrlParams();
 
-      if (urlParams.sort) {
+      var _this$getUrlParams = this.getUrlParams(),
+          sortBy = _this$getUrlParams.sortBy;
+
+      if (sortBy) {
         videos.sort(function (video1, video2) {
-          return video1[sort] - video2[sort];
+          return video2[sortBy] - video1[sortBy];
         });
       }
 
@@ -349,9 +345,9 @@ function (_React$Component4) {
             url = _ref.url,
             imgSrc = _ref.imgSrc,
             title = _ref.title,
-            viewCount = _ref.viewCount,
-            likeCount = _ref.likeCount,
-            dislikeCount = _ref.dislikeCount;
+            viewCountPretty = _ref.viewCountPretty,
+            likeCountPretty = _ref.likeCountPretty,
+            dislikeCountPretty = _ref.dislikeCountPretty;
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: id,
           className: "video col-12 col-sm-6 col-md-4 col-lg-3"
@@ -368,15 +364,15 @@ function (_React$Component4) {
           className: "video__stats"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-views"
-        }, viewCount.pretty, " views"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        }, viewCountPretty, " views"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-spacer"
         }, "\u2022"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-likes"
-        }, likeCount.pretty, " likes"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        }, likeCountPretty, " likes"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-spacer"
         }, "\u2022"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-dislikes"
-        }, dislikeCount.pretty, " dislikes"))));
+        }, dislikeCountPretty, " dislikes"))));
       })));
     }
   }]);

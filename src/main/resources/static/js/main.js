@@ -115,18 +115,15 @@ class Videos extends React.Component {
         title: video.snippet.title,
         url: `https://www.youtube.com/watch?v=${video.id}`,
         imgSrc: video.snippet.thumbnails.high.url,
-        viewCount: {
-          raw: Number(video.statistics.viewCount),
-          pretty: this.formatNumber(video.statistics.viewCount)
-        },
-        likeCount: {
-          raw: Number(video.statistics.likeCount),
-          pretty: this.formatNumber(video.statistics.likeCount)
-        },
-        dislikeCount: {
-          raw: Number(video.statistics.dislikeCount),
-          pretty: this.formatNumber(video.statistics.dislikeCount)
-        }
+
+        viewCount: Number(video.statistics.viewCount),
+        viewCountPretty: this.formatNumber(video.statistics.viewCount),
+
+        likeCount: Number(video.statistics.likeCount),
+        likeCountPretty: this.formatNumber(video.statistics.likeCount),
+
+        dislikeCount: Number(video.statistics.dislikeCount),
+        dislikeCountPretty: this.formatNumber(video.statistics.dislikeCount)
       }
     });
   }
@@ -146,11 +143,11 @@ class Videos extends React.Component {
 
   getVideos() {
     var videos = this.state.videos;
-    var urlParams = this.getUrlParams();
+    var { sortBy } = this.getUrlParams();
 
-    if (urlParams.sort) {
+    if (sortBy) {
       videos.sort((video1, video2) => {
-        return video1[sort] - video2[sort]
+        return video2[sortBy] - video1[sortBy];
       });
     }
 
@@ -174,7 +171,7 @@ class Videos extends React.Component {
       <div className="videos container">
         <div className="row">
           {videos && videos.map(({
-            id, url, imgSrc, title, viewCount, likeCount, dislikeCount
+            id, url, imgSrc, title, viewCountPretty, likeCountPretty, dislikeCountPretty
           }) => {
             return (
               <div key={id} className="video col-12 col-sm-6 col-md-4 col-lg-3">
@@ -183,11 +180,11 @@ class Videos extends React.Component {
                   <div className="video__title">{title}</div>
 
                   <div className="video__stats">
-                    <span className="video__stats-views">{viewCount.pretty} views</span>
+                    <span className="video__stats-views">{viewCountPretty} views</span>
                     <span className="video__stats-spacer">&bull;</span>
-                    <span className="video__stats-likes">{likeCount.pretty} likes</span>
+                    <span className="video__stats-likes">{likeCountPretty} likes</span>
                     <span className="video__stats-spacer">&bull;</span>
-                    <span className="video__stats-dislikes">{dislikeCount.pretty} dislikes</span>
+                    <span className="video__stats-dislikes">{dislikeCountPretty} dislikes</span>
                   </div>
                 </a>
               </div>
