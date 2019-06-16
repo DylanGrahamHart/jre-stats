@@ -29,6 +29,18 @@ public class MainController {
     @Autowired
     VideoService videoService;
 
+    @GetMapping("/channel")
+    @ResponseBody
+    public Map<String, Object> channel() {
+        return channelService.getChannel();
+    }
+
+    @GetMapping("/videos")
+    @ResponseBody
+    public List<Map<String, String>> videos() {
+        return videoService.getAllVideos();
+    }
+
     @GetMapping("/")
     public ModelAndView home(
             @RequestParam(defaultValue = "0") int page,
@@ -36,14 +48,6 @@ public class MainController {
             @RequestParam(defaultValue = "false") boolean reverse
     ) {
         ModelAndView mav = new ModelAndView("home");
-
-        List<Map<String, String>> videos = videoService.getAllVideos();
-        videos.sort((video1, video2) -> sortVideos(sort, reverse, video1, video2));
-        mav.addObject("videos", videos.subList(page * 50, page * 50 + 50));
-
-        mav.addObject("channel", channelService.getChannel());
-        mav.addObject("pagination", getPagination(page, videos.size()));
-
         return mav;
     }
 
