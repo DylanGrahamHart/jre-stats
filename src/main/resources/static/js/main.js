@@ -186,7 +186,7 @@ class Videos extends React.Component {
           sortBy = sortBy.substr(1);
 
       videos.sort((video1, video2) => {
-        return (video2[sortBy] - video1[sortBy]) * reverseFlag ? -1 : 1;
+        return (video2[sortBy] - video1[sortBy]) * (reverseFlag ? -1 : 1);
       });
     }
 
