@@ -175,14 +175,18 @@ class Videos extends React.Component {
     } else return Number(number);
   }
 
-
   getVideos() {
     var videos = this.state.videos;
     var { sortBy } = getUrlParams();
 
     if (sortBy) {
+      var reverseFlag = sortBy.indexOf('-') !== -1;
+
+      if (reverseFlag)
+          sortBy = sortBy.substr(1);
+
       videos.sort((video1, video2) => {
-        return video2[sortBy] - video1[sortBy];
+        return (video2[sortBy] - video1[sortBy]) * reverseFlag ? -1 : 1;
       });
     }
 

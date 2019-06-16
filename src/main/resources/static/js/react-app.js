@@ -355,8 +355,10 @@ function (_React$Component4) {
           sortBy = _getUrlParams.sortBy;
 
       if (sortBy) {
+        var reverseFlag = sortBy.indexOf('-') !== -1;
+        if (reverseFlag) sortBy = sortBy.substr(1);
         videos.sort(function (video1, video2) {
-          return video2[sortBy] - video1[sortBy];
+          return (video2[sortBy] - video1[sortBy]) * reverseFlag ? -1 : 1;
         });
       }
 
