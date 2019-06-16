@@ -118,6 +118,17 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
  ////
 
+function getUrlParams() {
+  var urlParams = {};
+  location.search.substr(1).split('&').forEach(function (param) {
+    var key = param.split('=')[0];
+    var value = param.split('=')[1];
+    urlParams[key] = value;
+  });
+  return urlParams;
+} ////
+
+
 var App =
 /*#__PURE__*/
 function (_React$Component) {
@@ -200,12 +211,24 @@ function (_React$Component3) {
   _inherits(Controls, _React$Component3);
 
   function Controls(props) {
+    var _this2;
+
     _classCallCheck(this, Controls);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Controls).call(this, props));
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(Controls).call(this, props));
+    _this2.state = {
+      value: getUrlParams().sortBy || 'publishedAt'
+    };
+    _this2.handleChange = _this2.handleChange.bind(_assertThisInitialized(_this2));
+    return _this2;
   }
 
   _createClass(Controls, [{
+    key: "handleChange",
+    value: function handleChange(event) {
+      location.href = 'http://' + location.hostname + '?sortBy=' + event.target.value;
+    }
+  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -218,9 +241,10 @@ function (_React$Component3) {
         className: "col-6 col-sm-3 col-md-1 controls__next"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", null, "Next")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-12 col-sm-6 col-md-10 controls__sort"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-        name: "sort"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null, "Sort By"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Sort By"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+        value: this.state.value,
+        onChange: this.handleChange
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: "publishedAt"
       }, "Date added (newest)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: "-publishedAt"
@@ -257,26 +281,26 @@ function (_React$Component4) {
   _inherits(Videos, _React$Component4);
 
   function Videos(props) {
-    var _this2;
+    var _this3;
 
     _classCallCheck(this, Videos);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(Videos).call(this, props));
-    _this2.state = {
+    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(Videos).call(this, props));
+    _this3.state = {
       videos: []
     };
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/videos').then(function (response) {
-      _this2.setState({
-        videos: _this2.parseVideosResponse(response.data)
+      _this3.setState({
+        videos: _this3.parseVideosResponse(response.data)
       });
     });
-    return _this2;
+    return _this3;
   }
 
   _createClass(Videos, [{
     key: "parseVideosResponse",
     value: function parseVideosResponse(videos) {
-      var _this3 = this;
+      var _this4 = this;
 
       return videos.map(function (video) {
         var viewCount = Number(video.statistics.viewCount);
@@ -286,16 +310,16 @@ function (_React$Component4) {
         return {
           id: video.id,
           publishedAt: publishedAt.getTime(),
-          publishedAtPretty: _this3.formatDate(publishedAt),
+          publishedAtPretty: _this4.formatDate(publishedAt),
           title: video.snippet.title,
           url: "https://www.youtube.com/watch?v=".concat(video.id),
           imgSrc: video.snippet.thumbnails.high.url,
           viewCount: viewCount,
-          viewCountPretty: _this3.formatNumber(video.statistics.viewCount),
+          viewCountPretty: _this4.formatNumber(video.statistics.viewCount),
           likeCount: likeCount,
-          likeCountPretty: _this3.formatNumber(video.statistics.likeCount),
+          likeCountPretty: _this4.formatNumber(video.statistics.likeCount),
           dislikeCount: dislikeCount,
-          dislikeCountPretty: _this3.formatNumber(video.statistics.dislikeCount),
+          dislikeCountPretty: _this4.formatNumber(video.statistics.dislikeCount),
           likesPerView: likeCount / viewCount,
           dislikesPerView: dislikeCount / viewCount
         };
@@ -323,23 +347,12 @@ function (_React$Component4) {
       } else return Number(number);
     }
   }, {
-    key: "getUrlParams",
-    value: function getUrlParams() {
-      var urlParams = {};
-      location.search.substr(1).split('&').forEach(function (param) {
-        var key = param.split('=')[0];
-        var value = param.split('=')[1];
-        urlParams[key] = value;
-      });
-      return urlParams;
-    }
-  }, {
     key: "getVideos",
     value: function getVideos() {
       var videos = this.state.videos;
 
-      var _this$getUrlParams = this.getUrlParams(),
-          sortBy = _this$getUrlParams.sortBy;
+      var _getUrlParams = getUrlParams(),
+          sortBy = _getUrlParams.sortBy;
 
       if (sortBy) {
         videos.sort(function (video1, video2) {

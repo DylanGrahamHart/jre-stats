@@ -4,6 +4,21 @@ import axios from 'axios';
 
 ////
 
+function getUrlParams() {
+  var urlParams = {};
+
+  location.search.substr(1).split('&').forEach((param) => {
+    var key = param.split('=')[0];
+    var value = param.split('=')[1];
+
+    urlParams[key] = value;
+  });
+
+  return urlParams;
+}
+
+////
+
 class App extends React.Component {
   render() {
     return (
@@ -54,9 +69,16 @@ class Channel extends React.Component {
   }
 }
 
+
 class Controls extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {value: getUrlParams().sortBy || 'publishedAt'};
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    location.href = 'http://' + location.hostname + '?sortBy=' + event.target.value
   }
 
   render() {
@@ -72,8 +94,9 @@ class Controls extends React.Component {
           </div>
 
           <div className="col-12 col-sm-6 col-md-10 controls__sort">
-            <select name="sort">
-              <option>Sort By</option>
+            <label>Sort By</label>
+
+            <select value={this.state.value} onChange={this.handleChange}>
               <option value="publishedAt">Date added (newest)</option>
               <option value="-publishedAt">Date added (oldest)</option>
               <option value="viewCount">Views (most)</option>
@@ -90,7 +113,7 @@ class Controls extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -152,22 +175,10 @@ class Videos extends React.Component {
     } else return Number(number);
   }
 
-  getUrlParams() {
-    var urlParams = {};
-
-    location.search.substr(1).split('&').forEach((param) => {
-      var key = param.split('=')[0];
-      var value = param.split('=')[1];
-
-      urlParams[key] = value;
-    });
-
-    return urlParams;
-  }
 
   getVideos() {
     var videos = this.state.videos;
-    var { sortBy } = this.getUrlParams();
+    var { sortBy } = getUrlParams();
 
     if (sortBy) {
       videos.sort((video1, video2) => {
