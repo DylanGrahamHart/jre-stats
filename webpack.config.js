@@ -2,14 +2,14 @@ const path = require('path');
 
 module.exports = {
 
-  entry: './src/main/resources/static/main.js',
+  entry: './src/main/resources/static/js/main.js',
   mode: 'none',
   devtool: 'source-map',
   watch: true,
 
   output: {
     filename: 'react-app.js',
-    path: path.resolve(__dirname, 'src/main/resources/static')
+    path: path.resolve(__dirname, 'src/main/resources/static/js')
   },
 
   module: {

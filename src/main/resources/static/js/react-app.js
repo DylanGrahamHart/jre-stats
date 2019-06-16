@@ -132,7 +132,7 @@ function (_React$Component) {
   _createClass(App, [{
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Channel, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Videos, null));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Channel, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Controls, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Videos, null));
     }
   }]);
 
@@ -187,10 +187,67 @@ function (_React$Component2) {
   return Channel;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-var Videos =
+var Controls =
 /*#__PURE__*/
 function (_React$Component3) {
-  _inherits(Videos, _React$Component3);
+  _inherits(Controls, _React$Component3);
+
+  function Controls(props) {
+    _classCallCheck(this, Controls);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Controls).call(this, props));
+  }
+
+  _createClass(Controls, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "controls container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-6 col-sm-3 col-md-1 controls__prev"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", null, "Prev")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-6 col-sm-3 col-md-1 controls__next"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", null, "Next")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-12 col-sm-6 col-md-10 controls__sort"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+        name: "sort"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null, "Sort By"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "publishedAt"
+      }, "Date added (newest)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "-publishedAt"
+      }, "Date added (oldest)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "viewCount"
+      }, "Views (most)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "-viewCount"
+      }, "Views (least)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "likeCount"
+      }, "Likes (most)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "-likeCount"
+      }, "Likes (least)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "dislikeCount"
+      }, "Dislikes (most)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "-dislikeCount"
+      }, "Dislikes (least)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "likesPerView"
+      }, "Likes per view (most)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "-likesPerView"
+      }, "Likes per view (least)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "dislikesPerView"
+      }, "Dislikes per view (most)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "-dislikesPerView"
+      }, "Dislikes per view (least)")))));
+    }
+  }]);
+
+  return Controls;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+var Videos =
+/*#__PURE__*/
+function (_React$Component4) {
+  _inherits(Videos, _React$Component4);
 
   function Videos(props) {
     var _this2;

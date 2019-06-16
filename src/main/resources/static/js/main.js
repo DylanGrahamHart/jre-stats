@@ -9,6 +9,7 @@ class App extends React.Component {
     return (
       <div>
         <Channel />
+        <Controls />
         <Videos />
       </div>
     )
@@ -40,6 +41,46 @@ class Channel extends React.Component {
                 <div className="subs-views__stat"><b>Subscribers:</b> {subscriberCount}</div>
                 <div className="subs-views__stat"><b>Views:</b> {viewCount}</div>
             </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+class Controls extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="controls container">
+        <div className="row">
+          <div className="col-6 col-sm-3 col-md-1 controls__prev">
+            <a>Prev</a>
+          </div>
+
+          <div className="col-6 col-sm-3 col-md-1 controls__next">
+            <a>Next</a>
+          </div>
+
+          <div className="col-12 col-sm-6 col-md-10 controls__sort">
+            <select name="sort">
+              <option>Sort By</option>
+              <option value="publishedAt">Date added (newest)</option>
+              <option value="-publishedAt">Date added (oldest)</option>
+              <option value="viewCount">Views (most)</option>
+              <option value="-viewCount">Views (least)</option>
+              <option value="likeCount">Likes (most)</option>
+              <option value="-likeCount">Likes (least)</option>
+              <option value="dislikeCount">Dislikes (most)</option>
+              <option value="-dislikeCount">Dislikes (least)</option>
+              <option value="likesPerView">Likes per view (most)</option>
+              <option value="-likesPerView">Likes per view (least)</option>
+              <option value="dislikesPerView">Dislikes per view (most)</option>
+              <option value="-dislikesPerView">Dislikes per view (least)</option>
+            </select>
           </div>
         </div>
       </div>
