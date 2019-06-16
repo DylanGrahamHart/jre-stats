@@ -19,7 +19,7 @@ function css1() {
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('out/production/resources/static'));
+    .pipe(gulp.dest('out/production/resources/static/css'));
 }
 function css2() {
   return gulp.src(CSS_SRC)
@@ -33,7 +33,7 @@ function cssWatch() {
 }
 
 exports.default = gulp.parallel(
-  cssWatch, htmlWatch, jsWatch,
-  css1, css2, html, js
+  cssWatch, htmlWatch,
+  css1, css2, html
 );
 

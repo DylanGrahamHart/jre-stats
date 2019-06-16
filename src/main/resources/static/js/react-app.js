@@ -150,24 +150,31 @@ function (_React$Component2) {
     _classCallCheck(this, Channel);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Channel).call(this, props));
+    _this.state = {
+      channel: {}
+    };
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/channel').then(function (response) {
       _this.setState({
-        channel: response.data
+        channel: _this.parseChannelResponse(response.data)
       });
     });
     return _this;
   }
 
   _createClass(Channel, [{
+    key: "parseChannelResponse",
+    value: function parseChannelResponse(channel) {
+      return {
+        subscriberCount: channel.items[0].statistics.subscriberCount,
+        viewCount: channel.items[0].statistics.viewCount
+      };
+    }
+  }, {
     key: "render",
     value: function render() {
-      try {
-        var subscriberCount = this.state.channel.items[0].statistics.subscriberCount;
-        var viewCount = this.state.channel.items[0].statistics.viewCount;
-      } catch (e) {
-        console.log('No channel');
-      }
-
+      var _this$state$channel = this.state.channel,
+          subscriberCount = _this$state$channel.subscriberCount,
+          viewCount = _this$state$channel.viewCount;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "subs-views container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -260,13 +267,65 @@ function (_React$Component4) {
     };
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/videos').then(function (response) {
       _this2.setState({
-        videos: response.data
+        videos: _this2.parseVideosResponse(response.data)
       });
     });
     return _this2;
   }
 
   _createClass(Videos, [{
+    key: "parseVideosResponse",
+    value: function parseVideosResponse(videos) {
+      var _this3 = this;
+
+      return videos.map(function (video) {
+        return {
+          id: video.id,
+          publishedAt: video.snippet.publishedAt,
+          title: video.snippet.title,
+          url: "https://www.youtube.com/watch?v=".concat(video.id),
+          imgSrc: video.snippet.thumbnails.high.url,
+          viewCount: {
+            raw: Number(video.statistics.viewCount),
+            pretty: _this3.formatNumber(video.statistics.viewCount)
+          },
+          likeCount: {
+            raw: Number(video.statistics.likeCount),
+            pretty: _this3.formatNumber(video.statistics.likeCount)
+          },
+          dislikeCount: {
+            raw: Number(video.statistics.dislikeCount),
+            pretty: _this3.formatNumber(video.statistics.dislikeCount)
+          }
+        };
+      });
+    }
+  }, {
+    key: "getUrlParams",
+    value: function getUrlParams() {
+      var urlParams = {};
+      location.search.substr(1).split('&').forEach(function (param) {
+        var key = param.split('=')[0];
+        var value = param.split('=')[1];
+        urlParams[key] = value;
+      });
+      return urlParams;
+    }
+  }, {
+    key: "getVideos",
+    value: function getVideos() {
+      var videos = this.state.videos;
+      var urlParams = this.getUrlParams();
+
+      if (urlParams.sort) {
+        videos.sort(function (video1, video2) {
+          return video1[sort] - video2[sort];
+        });
+      }
+
+      return this.state.videos.slice(0, 50);
+    }
+  }, {
     key: "formatNumber",
     value: function formatNumber(number) {
       if (number.length > 9) {
@@ -280,57 +339,44 @@ function (_React$Component4) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
-
-      var videos = this.state.videos.slice(0, 50);
+      var videos = this.getVideos();
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "videos container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
-      }, videos && videos.map(function (video) {
-        var videoUrl = "https://www.youtube.com/watch?v=".concat(video.id);
-
-        var viewCount = _this3.formatNumber(video.viewCount);
-
-        var likeCount = _this3.formatNumber(video.likeCount);
-
-        var dislikeCount = _this3.formatNumber(video.dislikeCount);
-
+      }, videos && videos.map(function (_ref) {
+        var id = _ref.id,
+            url = _ref.url,
+            imgSrc = _ref.imgSrc,
+            title = _ref.title,
+            viewCount = _ref.viewCount,
+            likeCount = _ref.likeCount,
+            dislikeCount = _ref.dislikeCount;
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          key: video.id,
+          key: id,
           className: "video col-12 col-sm-6 col-md-4 col-lg-3"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: videoUrl,
+          href: url,
           target: "_blank"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "video__img"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-          src: video.imgSrc
+          src: imgSrc
         })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "video__title"
-        }, video.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "video__stats"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-views"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "js-format-Number(number)"
-        }, viewCount), " views"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          style: {
-            margin: "0 4px"
-          }
+        }, viewCount.pretty, " views"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "video__stats-spacer"
         }, "\u2022"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-likes"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "js-format-number"
-        }, likeCount), " likes"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          style: {
-            margin: "0 4px"
-          }
+        }, likeCount.pretty, " likes"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "video__stats-spacer"
         }, "\u2022"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "video__stats-dislikes"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "js-format-number"
-        }, dislikeCount), " dislikes"))));
+        }, dislikeCount.pretty, " dislikes"))));
       })));
     }
   }]);

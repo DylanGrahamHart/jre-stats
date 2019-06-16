@@ -13,33 +13,26 @@ public class DataUtil {
         return (List<Map<String, Object>>) map.get(key);
     }
 
-    public static String getString(String keyPath, Map<String, Object> map) {
-        String value = null;
+    public static Object getObject(String keyPath, Map<String, Object> map) {
+        Object value = null;
 
         Map<String, Object> currentMap = map;
         for (String key : keyPath.split("\\.")) {
             try {
                 currentMap = getMap(key, currentMap);
             } catch (ClassCastException e) {
-                value = (String) currentMap.get(key);
+                value = (Object) currentMap.get(key);
             }
         }
 
         return value;
     }
 
+    public static String getString(String keyPath, Map<String, Object> map) {
+        return (String) getObject(keyPath, map);
+    }
+
     public static Integer getInteger(String keyPath, Map<String, Object> map) {
-        Integer value = null;
-
-        Map<String, Object> currentMap = map;
-        for (String key : keyPath.split("\\.")) {
-            try {
-                currentMap = getMap(key, currentMap);
-            } catch (ClassCastException e) {
-                value = (Integer) currentMap.get(key);
-            }
-        }
-
-        return value;
+        return (Integer) getObject(keyPath, map);
     }
 }

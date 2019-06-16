@@ -55,8 +55,8 @@ public class VideoService {
     }
 
     @Cacheable("allVideos")
-    public List<Map<String, String>> getAllVideos() {
-        List<Map<String, String>> allVideos = new ArrayList<>();
+    public List<Map<String, Object>> getAllVideos() {
+        List<Map<String, Object>> allVideos = new ArrayList<>();
 
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
@@ -72,17 +72,7 @@ public class VideoService {
             );
 
             for (Map<String, Object> videoItem : DataUtil.getList("items", videos)) {
-                Map<String, String> simpleVideo = new HashMap<>();
-
-                simpleVideo.put("id", DataUtil.getString("id", videoItem));
-                simpleVideo.put("imgSrc", DataUtil.getString("snippet.thumbnails.high.url", videoItem));
-                simpleVideo.put("title", DataUtil.getString("snippet.title", videoItem));
-                simpleVideo.put("likeCount", DataUtil.getString("statistics.likeCount", videoItem));
-                simpleVideo.put("dislikeCount", DataUtil.getString("statistics.dislikeCount", videoItem));
-                simpleVideo.put("viewCount", DataUtil.getString("statistics.viewCount", videoItem));
-                simpleVideo.put("publishedAt", DataUtil.getString("snippet.publishedAt", videoItem));
-
-                allVideos.add(simpleVideo);
+                allVideos.add(videoItem);
             }
         }
 
