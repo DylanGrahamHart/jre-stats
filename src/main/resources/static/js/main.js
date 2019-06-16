@@ -109,23 +109,47 @@ class Videos extends React.Component {
 
   parseVideosResponse(videos) {
     return videos.map((video) => {
+      var viewCount = Number(video.statistics.viewCount);
+      var likeCount = Number(video.statistics.likeCount);
+      var dislikeCount = Number(video.statistics.dislikeCount);
+      var publishedAt = new Date(video.snippet.publishedAt);
+
       return {
         id: video.id,
-        publishedAt: video.snippet.publishedAt,
+        publishedAt: publishedAt.getTime(),
+        publishedAtPretty: this.formatDate(publishedAt),
         title: video.snippet.title,
         url: `https://www.youtube.com/watch?v=${video.id}`,
         imgSrc: video.snippet.thumbnails.high.url,
 
-        viewCount: Number(video.statistics.viewCount),
+        viewCount,
         viewCountPretty: this.formatNumber(video.statistics.viewCount),
 
-        likeCount: Number(video.statistics.likeCount),
+        likeCount,
         likeCountPretty: this.formatNumber(video.statistics.likeCount),
 
-        dislikeCount: Number(video.statistics.dislikeCount),
-        dislikeCountPretty: this.formatNumber(video.statistics.dislikeCount)
+        dislikeCount,
+        dislikeCountPretty: this.formatNumber(video.statistics.dislikeCount),
+
+        likesPerView: likeCount / viewCount,
+        dislikesPerView: dislikeCount / viewCount,
       }
     });
+  }
+
+  formatDate(publishedAt) {
+    var options = {month: 'short', year: 'numeric', day: 'numeric'};
+    return publishedAt.toLocaleDateString('en-us', options);
+  }
+
+  formatNumber(number) {
+    if (number.length > 9) {
+      return (Number(number) / Math.pow(10, 9)).toFixed(1) + 'B';
+    } else if (number.length > 6) {
+      return (Number(number) / Math.pow(10, 6)).toFixed(1) + 'M';
+    } else if (number.length > 3) {
+      return (Number(number) / Math.pow(10, 3)).toFixed(0) + 'K';
+    } else return Number(number);
   }
 
   getUrlParams() {
@@ -154,16 +178,6 @@ class Videos extends React.Component {
     return this.state.videos.slice(0, 50);
   }
 
-  formatNumber(number) {
-    if (number.length > 9) {
-      return (Number(number) / Math.pow(10, 9)).toFixed(1) + 'B';
-    } else if (number.length > 6) {
-      return (Number(number) / Math.pow(10, 6)).toFixed(1) + 'M';
-    } else if (number.length > 3) {
-      return (Number(number) / Math.pow(10, 3)).toFixed(0) + 'K';
-    } else return Number(number);
-  }
-
   render() {
     var videos = this.getVideos();
 
@@ -171,7 +185,7 @@ class Videos extends React.Component {
       <div className="videos container">
         <div className="row">
           {videos && videos.map(({
-            id, url, imgSrc, title, viewCountPretty, likeCountPretty, dislikeCountPretty
+            id, publishedAtPretty, url, imgSrc, title, viewCountPretty, likeCountPretty, dislikeCountPretty
           }) => {
             return (
               <div key={id} className="video col-12 col-sm-6 col-md-4 col-lg-3">
@@ -179,12 +193,16 @@ class Videos extends React.Component {
                   <div className="video__img"><img src={imgSrc} /></div>
                   <div className="video__title">{title}</div>
 
-                  <div className="video__stats">
-                    <span className="video__stats-views">{viewCountPretty} views</span>
-                    <span className="video__stats-spacer">&bull;</span>
-                    <span className="video__stats-likes">{likeCountPretty} likes</span>
-                    <span className="video__stats-spacer">&bull;</span>
-                    <span className="video__stats-dislikes">{dislikeCountPretty} dislikes</span>
+                  <div className="video__info">
+                      <span className="video__info-views">{viewCountPretty} views</span>
+                      <span className="video__info-spacer">&bull;</span>
+                      <span className="video__info-likes">{likeCountPretty} likes</span>
+                      <span className="video__info-spacer">&bull;</span>
+                      <span className="video__info-dislikes">{dislikeCountPretty} dislikes</span>
+                  </div>
+
+                  <div className="video__info">
+                    {publishedAtPretty}
                   </div>
                 </a>
               </div>

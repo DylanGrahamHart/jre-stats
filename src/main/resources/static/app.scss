@@ -170,20 +170,21 @@ a {
     }
   }
 
-  &__stats {
+  &__info {
     color: $black;
     font-size: 13px;
+    margin-top: 4px;
   }
 
-  &__stats-spacer {
+  &__info-spacer {
     margin: 0 4px;
   }
 
-  &__stats-likes {
+  &__info-likes {
     color: green;
   }
 
-  &__stats-dislikes {
+  &__info-dislikes {
     color: #e00;
   }
 }

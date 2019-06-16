@@ -13,13 +13,13 @@ function htmlWatch() {
   gulp.watch(HTML_SRC, html);
 }
 
-const CSS_SRC = 'src/main/resources/static/css/**/*.scss';
+const CSS_SRC = 'src/main/resources/static/**/*.scss';
 function css1() {
   return gulp.src(CSS_SRC)
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('out/production/resources/static/css'));
+    .pipe(gulp.dest('out/production/resources/static'));
 }
 function css2() {
   return gulp.src(CSS_SRC)

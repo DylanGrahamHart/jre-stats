@@ -279,20 +279,48 @@ function (_React$Component4) {
       var _this3 = this;
 
       return videos.map(function (video) {
+        var viewCount = Number(video.statistics.viewCount);
+        var likeCount = Number(video.statistics.likeCount);
+        var dislikeCount = Number(video.statistics.dislikeCount);
+        var publishedAt = new Date(video.snippet.publishedAt);
         return {
           id: video.id,
-          publishedAt: video.snippet.publishedAt,
+          publishedAt: publishedAt.getTime(),
+          publishedAtPretty: _this3.formatDate(publishedAt),
           title: video.snippet.title,
           url: "https://www.youtube.com/watch?v=".concat(video.id),
           imgSrc: video.snippet.thumbnails.high.url,
-          viewCount: Number(video.statistics.viewCount),
+          viewCount: viewCount,
           viewCountPretty: _this3.formatNumber(video.statistics.viewCount),
-          likeCount: Number(video.statistics.likeCount),
+          likeCount: likeCount,
           likeCountPretty: _this3.formatNumber(video.statistics.likeCount),
-          dislikeCount: Number(video.statistics.dislikeCount),
-          dislikeCountPretty: _this3.formatNumber(video.statistics.dislikeCount)
+          dislikeCount: dislikeCount,
+          dislikeCountPretty: _this3.formatNumber(video.statistics.dislikeCount),
+          likesPerView: likeCount / viewCount,
+          dislikesPerView: dislikeCount / viewCount
         };
       });
+    }
+  }, {
+    key: "formatDate",
+    value: function formatDate(publishedAt) {
+      var options = {
+        month: 'short',
+        year: 'numeric',
+        day: 'numeric'
+      };
+      return publishedAt.toLocaleDateString('en-us', options);
+    }
+  }, {
+    key: "formatNumber",
+    value: function formatNumber(number) {
+      if (number.length > 9) {
+        return (Number(number) / Math.pow(10, 9)).toFixed(1) + 'B';
+      } else if (number.length > 6) {
+        return (Number(number) / Math.pow(10, 6)).toFixed(1) + 'M';
+      } else if (number.length > 3) {
+        return (Number(number) / Math.pow(10, 3)).toFixed(0) + 'K';
+      } else return Number(number);
     }
   }, {
     key: "getUrlParams",
@@ -322,17 +350,6 @@ function (_React$Component4) {
       return this.state.videos.slice(0, 50);
     }
   }, {
-    key: "formatNumber",
-    value: function formatNumber(number) {
-      if (number.length > 9) {
-        return (Number(number) / Math.pow(10, 9)).toFixed(1) + 'B';
-      } else if (number.length > 6) {
-        return (Number(number) / Math.pow(10, 6)).toFixed(1) + 'M';
-      } else if (number.length > 3) {
-        return (Number(number) / Math.pow(10, 3)).toFixed(0) + 'K';
-      } else return Number(number);
-    }
-  }, {
     key: "render",
     value: function render() {
       var videos = this.getVideos();
@@ -342,6 +359,7 @@ function (_React$Component4) {
         className: "row"
       }, videos && videos.map(function (_ref) {
         var id = _ref.id,
+            publishedAtPretty = _ref.publishedAtPretty,
             url = _ref.url,
             imgSrc = _ref.imgSrc,
             title = _ref.title,
@@ -361,18 +379,20 @@ function (_React$Component4) {
         })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "video__title"
         }, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "video__stats"
+          className: "video__info"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "video__stats-views"
+          className: "video__info-views"
         }, viewCountPretty, " views"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "video__stats-spacer"
+          className: "video__info-spacer"
         }, "\u2022"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "video__stats-likes"
+          className: "video__info-likes"
         }, likeCountPretty, " likes"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "video__stats-spacer"
+          className: "video__info-spacer"
         }, "\u2022"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "video__stats-dislikes"
-        }, dislikeCountPretty, " dislikes"))));
+          className: "video__info-dislikes"
+        }, dislikeCountPretty, " dislikes")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "video__info"
+        }, publishedAtPretty)));
       })));
     }
   }]);
