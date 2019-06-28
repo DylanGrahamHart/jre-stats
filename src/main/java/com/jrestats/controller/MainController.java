@@ -40,7 +40,7 @@ public class MainController {
 
     @GetMapping("/videos")
     @ResponseBody
-    public List<Map<String, Object>> videos() {
+    public List<Map<String, String>> videos() {
         return videoService.getAllVideos();
     }
 

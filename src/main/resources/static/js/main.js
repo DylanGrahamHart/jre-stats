@@ -125,107 +125,39 @@ class Videos extends React.Component {
 
     axios.get('/videos').then((response) => {
       this.setState({
-        videos: this.parseVideosResponse(response.data)
+        videos: response.data
       });
     });
-  }
-
-  parseVideosResponse(videos) {
-    return videos.map((video) => {
-      var viewCount = Number(video.statistics.viewCount);
-      var likeCount = Number(video.statistics.likeCount);
-      var dislikeCount = Number(video.statistics.dislikeCount);
-      var publishedAt = new Date(video.snippet.publishedAt);
-
-      return {
-        id: video.id,
-        publishedAt: publishedAt.getTime(),
-        publishedAtPretty: this.formatDate(publishedAt),
-        title: video.snippet.title,
-        url: `https://www.youtube.com/watch?v=${video.id}`,
-        imgSrc: video.snippet.thumbnails.high.url,
-
-        viewCount,
-        viewCountPretty: this.formatNumber(video.statistics.viewCount),
-
-        likeCount,
-        likeCountPretty: this.formatNumber(video.statistics.likeCount),
-
-        dislikeCount,
-        dislikeCountPretty: this.formatNumber(video.statistics.dislikeCount),
-
-        likesPerView: likeCount / viewCount,
-        dislikesPerView: dislikeCount / viewCount,
-      }
-    });
-  }
-
-  formatDate(publishedAt) {
-    var options = {month: 'short', year: 'numeric', day: 'numeric'};
-    return publishedAt.toLocaleDateString('en-us', options);
-  }
-
-  formatNumber(number) {
-    if (number.length > 9) {
-      return (Number(number) / Math.pow(10, 9)).toFixed(1) + 'B';
-    } else if (number.length > 6) {
-      return (Number(number) / Math.pow(10, 6)).toFixed(1) + 'M';
-    } else if (number.length > 3) {
-      return (Number(number) / Math.pow(10, 3)).toFixed(0) + 'K';
-    } else return Number(number);
-  }
-
-  getVideos() {
-    var videos = this.state.videos;
-    var { sortBy } = getUrlParams();
-
-    if (sortBy) {
-      var reverseFlag = sortBy.indexOf('-') !== -1;
-
-      if (reverseFlag)
-          sortBy = sortBy.substr(1);
-
-      videos.sort((video1, video2) => {
-        return (video2[sortBy] - video1[sortBy]) * (reverseFlag ? -1 : 1);
-      });
-    }
-
-    return this.state.videos.slice(0, 50);
   }
 
   render() {
-    var videos = this.getVideos();
+    var videos = this.state.videos;
 
     return (
       <div className="videos container">
         <div className="row">
-          {videos && videos.map(({
-            id, publishedAtPretty, url, imgSrc, title, viewCountPretty, likeCountPretty, dislikeCountPretty
-          }) => {
+          {videos && videos.map(({ id, imgSrc, title, likeCount, dislikeCount, viewCount, publishedAt }) => {
             return (
               <div key={id} className="video col-12 col-sm-6 col-md-4 col-lg-3">
-                <a href={url} target="_blank">
+                <a href={`https://www.youtube.com/watch?v=${id}`} target="_blank">
                   <div className="video__img"><img src={imgSrc} /></div>
                   <div className="video__title">{title}</div>
 
                   <div className="video__info">
-                      <span className="video__info-views">{viewCountPretty} views</span>
+                      <span className="video__info-views">{viewCount} views</span>
                       <span className="video__info-spacer">&bull;</span>
-                      <span className="video__info-likes">{likeCountPretty} likes</span>
+                      <span className="video__info-likes">{likeCount} likes</span>
                       <span className="video__info-spacer">&bull;</span>
-                      <span className="video__info-dislikes">{dislikeCountPretty} dislikes</span>
+                      <span className="video__info-dislikes">{dislikeCount} dislikes</span>
                   </div>
 
-                  <div className="video__info">
-                    {publishedAtPretty}
-                  </div>
+                  <div className="video__info">{publishedAt}</div>
                 </a>
               </div>
             )
           })}
         </div>
       </div>
-
     )
   }
 }

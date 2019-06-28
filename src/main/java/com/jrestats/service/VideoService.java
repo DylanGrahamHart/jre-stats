@@ -55,8 +55,8 @@ public class VideoService {
     }
 
     @Cacheable("allVideos")
-    public List<Map<String, Object>> getAllVideos() {
-        List<Map<String, Object>> allVideos = new ArrayList<>();
+    public List<Map<String, String>> getAllVideos() {
+        List<Map<String, String>> allVideos = new ArrayList<>();
 
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
@@ -72,10 +72,31 @@ public class VideoService {
             );
 
             for (Map<String, Object> videoItem : DataUtil.getList("items", videos)) {
-                allVideos.add(videoItem);
+                Map<String, String> video = new HashMap<>();
+
+                video.put("id", DataUtil.getString("id", videoItem));
+                video.put("imgSrc", DataUtil.getString("snippet.thumbnails.high.url", videoItem));
+                video.put("title", DataUtil.getString("snippet.title", videoItem));
+
+                video.put("likeCount", formatNumber(DataUtil.getString("statistics.likeCount", videoItem)));
+                video.put("dislikeCount", formatNumber(DataUtil.getString("statistics.dislikeCount", videoItem)));
+                video.put("viewCount", formatNumber(DataUtil.getString("statistics.viewCount", videoItem)));
+
+                video.put("publishedAt", formatDate(DataUtil.getString("snippet.publishedAt", videoItem)));
+
+                allVideos.add(video);
             }
         }
 
         return allVideos;
     }
+
+    private String formatNumber(String numberToFormat) {
+        return numberToFormat;
+    }
+
+    private String formatDate(String dateToFormat) {
+        return dateToFormat;
+    }
 }
+
