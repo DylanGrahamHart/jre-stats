@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,7 +93,18 @@ public class VideoService {
     }
 
     private String formatNumber(String numberToFormat) {
-        return numberToFormat;
+        String formattedNumber = numberToFormat;
+        float number = Float.parseFloat(numberToFormat);
+
+        if (numberToFormat.length() > 9) {
+            formattedNumber = String.format("%.1f", (Math.floor(number / Math.pow(10, 9)))) + 'B';
+        } else if (numberToFormat.length() > 6) {
+            formattedNumber = String.format("%.1f", Math.floor((number / Math.pow(10, 6)))) + 'M';
+        } else if (numberToFormat.length() > 3) {
+            formattedNumber = String.format("%.0f", Math.floor((number / Math.pow(10, 3)))) + 'K';
+        }
+
+        return formattedNumber;
     }
 
     private String formatDate(String dateToFormat) {
