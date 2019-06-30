@@ -2,6 +2,7 @@ package com.jrestats.service;
 
 import com.jrestats.controller.MainController;
 import com.jrestats.util.DataUtil;
+import com.jrestats.viewmodel.Video;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class VideoService {
@@ -56,8 +55,8 @@ public class VideoService {
     }
 
     @Cacheable("allVideos")
-    public List<Map<String, String>> getAllVideos() {
-        List<Map<String, String>> allVideos = new ArrayList<>();
+    public List<Video> getAllVideos() {
+        List<Video> allVideos = new ArrayList<>();
 
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
@@ -73,42 +72,12 @@ public class VideoService {
             );
 
             for (Map<String, Object> videoItem : DataUtil.getList("items", videos)) {
-                Map<String, String> video = new HashMap<>();
-
-                video.put("id", DataUtil.getString("id", videoItem));
-                video.put("imgSrc", DataUtil.getString("snippet.thumbnails.high.url", videoItem));
-                video.put("title", DataUtil.getString("snippet.title", videoItem));
-
-                video.put("likeCount", formatNumber(DataUtil.getString("statistics.likeCount", videoItem)));
-                video.put("dislikeCount", formatNumber(DataUtil.getString("statistics.dislikeCount", videoItem)));
-                video.put("viewCount", formatNumber(DataUtil.getString("statistics.viewCount", videoItem)));
-
-                video.put("publishedAt", formatDate(DataUtil.getString("snippet.publishedAt", videoItem)));
-
-                allVideos.add(video);
+                allVideos.add(new Video(videoItem));
             }
         }
 
         return allVideos;
     }
 
-    private String formatNumber(String numberToFormat) {
-        String formattedNumber = numberToFormat;
-        float number = Float.parseFloat(numberToFormat);
-
-        if (numberToFormat.length() > 9) {
-            formattedNumber = String.format("%.1f", (Math.floor(number / Math.pow(10, 9)))) + 'B';
-        } else if (numberToFormat.length() > 6) {
-            formattedNumber = String.format("%.1f", Math.floor((number / Math.pow(10, 6)))) + 'M';
-        } else if (numberToFormat.length() > 3) {
-            formattedNumber = String.format("%.0f", Math.floor((number / Math.pow(10, 3)))) + 'K';
-        }
-
-        return formattedNumber;
-    }
-
-    private String formatDate(String dateToFormat) {
-        return dateToFormat;
-    }
 }
 

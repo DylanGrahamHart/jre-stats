@@ -2,6 +2,7 @@ package com.jrestats.controller;
 
 import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoService;
+import com.jrestats.viewmodel.Video;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class MainController {
 
     @GetMapping("/videos")
     @ResponseBody
-    public List<Map<String, String>> videos() {
+    public List<Video> videos() {
         return videoService.getAllVideos();
     }
 
