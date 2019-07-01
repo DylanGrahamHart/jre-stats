@@ -39,16 +39,9 @@ class Channel extends React.Component {
 
     axios.get('/channel').then((response) => {
       this.setState({
-        channel: this.parseChannelResponse(response.data)
+        channel: response.data
       });
     });
-  }
-
-  parseChannelResponse(channel) {
-    return {
-      subscriberCount: channel.items[0].statistics.subscriberCount,
-      viewCount: channel.items[0].statistics.viewCount
-    }
   }
 
   render() {

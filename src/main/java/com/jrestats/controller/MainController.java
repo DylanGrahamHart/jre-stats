@@ -2,6 +2,7 @@ package com.jrestats.controller;
 
 import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoService;
+import com.jrestats.viewmodel.Channel;
 import com.jrestats.viewmodel.Video;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class MainController {
 
     @GetMapping("/channel")
     @ResponseBody
-    public Map<String, Object> channel() {
+    public Channel channel() {
         return channelService.getChannel();
     }
 

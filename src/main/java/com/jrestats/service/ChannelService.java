@@ -1,5 +1,6 @@
 package com.jrestats.service;
 
+import com.jrestats.viewmodel.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -14,13 +15,13 @@ public class ChannelService {
     YouTubeApiService apiService;
 
     @Cacheable("channel")
-    public Map<String, Object> getChannel() {
-        Map<String, Object> channel = apiService.get("channels",
+    public Channel getChannel() {
+        Map<String, Object> response = apiService.get("channels",
                 "id", "UCzQUP1qoWDoEbmsQxvdjxgQ",
                 "part", "snippet,statistics"
         );
 
-        return channel;
+        return new Channel(response);
     }
 
 }

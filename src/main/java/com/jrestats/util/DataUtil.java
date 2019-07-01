@@ -21,7 +21,7 @@ public class DataUtil {
             try {
                 currentMap = getMap(key, currentMap);
             } catch (ClassCastException e) {
-                value = (Object) currentMap.get(key);
+                value = currentMap.get(key);
             }
         }
 
@@ -29,10 +29,10 @@ public class DataUtil {
     }
 
     public static String getString(String keyPath, Map<String, Object> map) {
-        return (String) getObject(keyPath, map);
+        return getObject(keyPath, map).toString();
     }
 
     public static Integer getInteger(String keyPath, Map<String, Object> map) {
-        return (Integer) getObject(keyPath, map);
+        return Integer.parseInt(getString(keyPath, map));
     }
 }
