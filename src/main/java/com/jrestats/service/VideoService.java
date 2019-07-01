@@ -2,6 +2,7 @@ package com.jrestats.service;
 
 import com.jrestats.controller.MainController;
 import com.jrestats.util.DataUtil;
+import com.jrestats.util.FormatUtil;
 import com.jrestats.viewmodel.Video;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public class VideoService {
 
     @Cacheable("allVideos")
     public List<Video> getAllVideos() {
-        List<Video> allVideos = new ArrayList<>();
+        List<Map<String, String>> allVideos = new ArrayList<>();
 
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
@@ -72,11 +73,26 @@ public class VideoService {
             );
 
             for (Map<String, Object> videoItem : DataUtil.getList("items", videos)) {
-                allVideos.add(new Video(videoItem));
+                Map<String, String> videoData = new HashMap<>();
+
+                videoData.put("id", DataUtil.getString("id", videoItem));
+                videoData.put("imgSrc", DataUtil.getString("snippet.thumbnails.high.url", videoItem));
+                videoData.put("title", DataUtil.getString("snippet.title", videoItem));
+
+                videoData.put("likeCount", DataUtil.getString("statistics.likeCount", videoItem));
+                videoData.put("dislikeCount", DataUtil.getString("statistics.dislikeCount", videoItem));
+                videoData.put("viewCount", DataUtil.getString("statistics.viewCount", videoItem));
+
+                videoData.put("publishedAt", DataUtil.getString("snippet.publishedAt", videoItem));
+                alll
             }
         }
 
         return allVideos;
+    }
+
+    public List<Video> getSortedSubList() {
+
     }
 
 }
