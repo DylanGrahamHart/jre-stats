@@ -56,8 +56,8 @@ public class VideoService {
     }
 
     @Cacheable("allVideos")
-    public List<Video> getAllVideos() {
-        List<Map<String, String>> allVideos = new ArrayList<>();
+    public List<Map<String, String>> getAllVideos() {
+        List<Map<String, String>> allVideoData = new ArrayList<>();
 
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
@@ -84,15 +84,16 @@ public class VideoService {
                 videoData.put("viewCount", DataUtil.getString("statistics.viewCount", videoItem));
 
                 videoData.put("publishedAt", DataUtil.getString("snippet.publishedAt", videoItem));
-                alll
+
+                allVideoData.add(videoData);
             }
         }
 
-        return allVideos;
+        return allVideoData;
     }
 
     public List<Video> getSortedSubList() {
-
+        return getAllVideos().subL
     }
 
 }
