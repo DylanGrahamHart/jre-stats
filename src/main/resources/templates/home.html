@@ -2,37 +2,16 @@
 <html>
 
 <head>
-  <title>JRE Stats</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/app.css">
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-30447151-5"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-    gtag('config', 'UA-30447151-5');
-  </script>
+  {{> partials/head }}
 </head>
 
 <body>
 
-  <div id="header">
-    <div class="container">
-      <div class="row">
-        <a href="/" class="col-12">JRE Stats</a>
-      </div>
-    </div>
-  </div>
+  {{> partials/header }}
 
-  <div id="app-root"></div>
+  {{> partials/channel-info }}
+  {{> partials/controls }}
+  {{> partials/video-list }}
 
-  <script src="/js/react-app.js"></script>
 </body>
 </html>

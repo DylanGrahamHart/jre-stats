@@ -30,20 +30,12 @@ public class MainController {
     VideoService videoService;
 
     @GetMapping("/")
-    public String home() {
-        return "home";
-    }
+    public ModelAndView home() {
+        ModelAndView mav = new ModelAndView("home");
+        mav.addObject("channel", channelService.getChannel());
+        mav.addObject("videos", videoService.getAllVideos());
 
-    @GetMapping("/channel")
-    @ResponseBody
-    public Channel channel() {
-        return channelService.getChannel();
-    }
-
-    @GetMapping("/videos")
-    @ResponseBody
-    public List<Video> videos() {
-        return videoService.getAllVideos();
+        return mav;
     }
 
     @ExceptionHandler(Exception.class)

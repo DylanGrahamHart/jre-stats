@@ -31,6 +31,4 @@ public class Video {
         this.publishedAt = FormatUtil.formatDate(DataUtil.getString("snippet.publishedAt", videoItem));
     }
 
-
-
 }
