@@ -56,8 +56,8 @@ public class VideoService {
     }
 
     @Cacheable("allVideos")
-    public List<Map<String, String>> getAllVideos() {
-        List<Map<String, String>> allVideoData = new ArrayList<>();
+    public List<Video> getAllVideos() {
+        List<Video> allVideos = new ArrayList<>();
 
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
@@ -73,27 +73,23 @@ public class VideoService {
             );
 
             for (Map<String, Object> videoItem : DataUtil.getList("items", videos)) {
-                Map<String, String> videoData = new HashMap<>();
-
-                videoData.put("id", DataUtil.getString("id", videoItem));
-                videoData.put("imgSrc", DataUtil.getString("snippet.thumbnails.high.url", videoItem));
-                videoData.put("title", DataUtil.getString("snippet.title", videoItem));
-
-                videoData.put("likeCount", DataUtil.getString("statistics.likeCount", videoItem));
-                videoData.put("dislikeCount", DataUtil.getString("statistics.dislikeCount", videoItem));
-                videoData.put("viewCount", DataUtil.getString("statistics.viewCount", videoItem));
-
-                videoData.put("publishedAt", DataUtil.getString("snippet.publishedAt", videoItem));
-
-                allVideoData.add(videoData);
+                allVideos.add(new Video(videoItem));
             }
         }
 
-        return allVideoData;
+        return allVideos;
     }
 
-    public List<Video> getSortedSubList() {
-        return getAllVideos().subL
+    public List<Video> getSortedSubList(List<Video> allVideos, String page, String sortKey) {
+        int p = Integer.parseInt(page);
+        int to = p * 50;
+        int from = p * 50 + 50;
+
+        if (!sortKey.isEmpty()) {
+            System.out.println("I stab");
+        }
+
+        return allVideos.subList(to, from);
     }
 
 }

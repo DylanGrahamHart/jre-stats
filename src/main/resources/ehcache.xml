@@ -13,7 +13,7 @@
   <cache name="channel"
          maxEntriesLocalHeap="5"
          eternal="false"
-         timeToLiveSeconds="3600"
+         timeToLiveSeconds="60"
          memoryStoreEvictionPolicy="LRU" />
 
 </ehcache>

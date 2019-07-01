@@ -30,10 +30,13 @@ public class MainController {
     VideoService videoService;
 
     @GetMapping("/")
-    public ModelAndView home() {
+    public ModelAndView home(
+            @RequestParam(defaultValue = "0") String page,
+            @RequestParam(defaultValue = "") String sort
+    ) {
         ModelAndView mav = new ModelAndView("home");
         mav.addObject("channel", channelService.getChannel());
-        mav.addObject("videos", videoService.getAllVideos());
+        mav.addObject("videos", videoService.getSortedSubList(videoService.getAllVideos(), page, sort));
 
         return mav;
     }
