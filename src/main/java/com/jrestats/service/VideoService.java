@@ -44,23 +44,11 @@ public class VideoService {
         allPlaylistItems.add(playlistItems);
 
         int totalResults = DataUtil.getInteger("pageInfo.totalResults", playlistItems);
-        String nextPageToken = null;
-
-        try {
-            nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
-        } catch (Exception e) {
-            System.out.println("No next token: " + e.getMessage());
-        }
+        String nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
 
         for (int i = 0; i < totalResults / pagesOfVideosToGet; i++) {
             playlistItems = getPlaylistItems(nextPageToken);
-
-            try {
-                nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
-            } catch (Exception e) {
-                System.out.println("No next token: " + e.getMessage());
-            }
-
+            nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
             allPlaylistItems.add(playlistItems);
         }
 

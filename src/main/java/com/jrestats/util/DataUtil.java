@@ -29,8 +29,11 @@ public class DataUtil {
     }
 
     public static String getString(String keyPath, Map<String, Object> map) {
-        System.out.println(keyPath);
-        return getObject(keyPath, map).toString();
+        Object obj = getObject(keyPath, map);
+        if (obj == null) {
+            return "";
+        }
+        return obj.toString();
     }
 
     public static Integer getInteger(String keyPath, Map<String, Object> map) {
