@@ -7,20 +7,22 @@
               class="active"
             {{/ controls.prev }}
           >
-            Prev</a>
+            Prev
+          </a>
       </div>
 
       <div class="col-6 col-sm-3 col-md-1 controls__next">
-        {{^ controls.next }}
-          <a>Next</a>
-        {{/ controls.next }}
-
-        {{# controls.next }}
-          <a href="{{ controls.next }}">Next</a>
-        {{/ controls.next }}
+          <a
+            {{# controls.next }}
+              href="{{ controls.next }}"
+              class="active"
+            {{/ controls.next }}
+          >
+            Next
+          </a>
       </div>
 
-<!--       <div class="col-12 col-sm-6 col-md-10 controls__sort">
+      <div class="col-12 col-sm-6 col-md-10 controls__sort">
         <label>Sort By</label>
 
         <select>
@@ -37,6 +39,6 @@
           <option value="dislikesPerView">Dislikes per view (most)</option>
           <option value="-dislikesPerView">Dislikes per view (least)</option>
         </select>
-      </div> -->
+      </div>
     </div>
   </div>
