@@ -36,6 +36,7 @@ public class App {
 		ApplicationContext app = SpringApplication.run(App.class, args);
         VideoService videoService = app.getBean(VideoService.class);
         videoService.getAllVideos();
+        System.out.println("App done booting");
 	}
 
 }
