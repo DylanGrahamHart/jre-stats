@@ -95,20 +95,17 @@ public class VideoService {
     private int sortVideos(String sort, Video video1, Video video2) {
         int compareFlag = 0;
 
-        Map<String, Object> videoItem1 = video1.item;
-        Map<String, Object> videoItem2 = video2.item;
-
-        int likeCount1 = video1.getLikeCount();
-        int likeCount2 = video2.getLikeCount();
-        int dislikeCount1 = video1.getDislikeCount();
-        int dislikeCount2 = video2.getDislikeCount();
-        int viewCount1 = video1.getViewCount();
-        int viewCount2 = video2.getViewCount();
+        int likeCount1 = video1.likeCountRaw;
+        int likeCount2 = video2.likeCountRaw;
+        int dislikeCount1 = video1.dislikeCountRaw;
+        int dislikeCount2 = video2.dislikeCountRaw;
+        int viewCount1 = video1.viewCountRaw;
+        int viewCount2 = video2.viewCountRaw;
 
         if (sort.contains("publishedAt")) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            String dateStr1 = video1.getPublishedAt();
-            String dateStr2 = video2.getPublishedAt();
+            String dateStr1 = video1.publishedAtRaw;
+            String dateStr2 = video2.publishedAtRaw;
 
             try {
                 long date1 = dateFormat.parse(dateStr1).getTime();

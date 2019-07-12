@@ -34,10 +34,10 @@ public class FormatUtil {
         try {
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             Date date = inputDateFormat.parse(dateToFormat);
-            SimpleDateFormat outputDateFormat = new SimpleDateFormat("MM-");
-
-            formattedDate = inputDateFormat.parse(dateToFormat).toString();
-        } catch (ParseException e) {}
+            formattedDate = (new SimpleDateFormat("MMM, dd yyyy")).format(date).toString();
+        } catch (ParseException e) {
+            System.out.println("Date error: " + e.getMessage());
+        }
 
         return formattedDate;
     }

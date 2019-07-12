@@ -147,7 +147,7 @@ a {
   }
 }
 .video {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
   &:hover &__title {
     text-decoration: underline;
@@ -178,11 +178,11 @@ a {
   &__info {
     color: $black;
     font-size: 13px;
-    margin-top: 4px;
+    margin-top: 5px;
   }
 
   &__info-spacer {
-    margin: 0 4px;
+    margin: 0 2px;
   }
 
   &__info-likes {
@@ -191,5 +191,9 @@ a {
 
   &__info-dislikes {
     color: #e00;
+  }
+
+  &__info-date {
+    font-weight: bold;
   }
 }
