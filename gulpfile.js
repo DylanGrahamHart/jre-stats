@@ -13,6 +13,15 @@ function htmlWatch() {
   gulp.watch(HTML_SRC, html);
 }
 
+const JS_SRC = 'src/main/resources/static/**/*.js';
+function js() {
+  return gulp.src(JS_SRC)
+    .pipe(gulp.dest('out/production/resources/static'));
+}
+function jsWatch() {
+  gulp.watch(JS_SRC, js);
+}
+
 const CSS_SRC = 'src/main/resources/static/**/*.scss';
 function css1() {
   return gulp.src(CSS_SRC)
@@ -33,7 +42,7 @@ function cssWatch() {
 }
 
 exports.default = gulp.parallel(
-  cssWatch, htmlWatch,
-  css1, css2, html
+  htmlWatch, cssWatch, jsWatch,
+  html, css1, css2, js
 );
 
