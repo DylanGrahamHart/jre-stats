@@ -32,7 +32,7 @@ public class MainController {
     @GetMapping("/")
     public ModelAndView home(
             @RequestParam(defaultValue = "0") String page,
-            @RequestParam(defaultValue = "publishedAt") String sort
+            @RequestParam(defaultValue = "") String sort
     ) {
         ModelAndView mav = new ModelAndView("home");
         mav.addObject("channel", channelService.getChannel());

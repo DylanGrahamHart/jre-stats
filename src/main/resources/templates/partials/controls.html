@@ -41,8 +41,10 @@
         </select>
 
         <script>
-          document.getElementById('sort').value = '{{ controls.sort }}';
-
+          var autoSelectSort = '{{ controls.sort }}';
+          if (autoSelectSort) {
+            document.getElementById('sort').value = autoSelectSort;
+          }
         </script>
       </div>
     </div>

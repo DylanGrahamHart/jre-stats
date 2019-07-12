@@ -47,4 +47,8 @@ public class Video {
         return DataUtil.getInteger("statistics.viewCount", item);
     }
 
+    public String getPublishedAt() {
+        return DataUtil.getString("snippet.publishedAt", item);
+    }
+
 }
