@@ -92,5 +92,40 @@ public class VideoService {
         return allVideos.subList(to, from);
     }
 
+    public Map<String, Object> getControls(int numberOfVideos, String page, String sortKey) {
+        Map<String, Object> controls = new HashMap<>();
+        int p = Integer.parseInt(page);
+        int maxPages = numberOfVideos / 50;
+
+        if (p == 1) {
+            if (!"".equals(sortKey)) {
+                controls.put("prev", "?sort=" + sortKey);
+            } else {
+                controls.put("prev", "/");
+            }
+        }
+        if (p > 1) {
+            String controlString = "?page=" + (p-1);
+
+            if (!"".equals(sortKey)) {
+                controlString += "&sort=" + sortKey;
+            }
+
+            controls.put("prev", controlString);
+        }
+        if (p < maxPages-1) {
+            String controlString = "?page=" + (p+1);
+
+            if (!"".equals(sortKey)) {
+                controlString += "&sort=" + sortKey;
+            }
+
+            controls.put("next", controlString);
+        }
+
+        controls.put("sort", sortKey);
+        return controls;
+    }
+
 }
 

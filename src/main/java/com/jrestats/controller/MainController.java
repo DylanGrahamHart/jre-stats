@@ -36,7 +36,10 @@ public class MainController {
     ) {
         ModelAndView mav = new ModelAndView("home");
         mav.addObject("channel", channelService.getChannel());
-        mav.addObject("videos", videoService.getSortedSubList(videoService.getAllVideos(), page, sort));
+
+        List<Video> allVideos = videoService.getAllVideos();
+        mav.addObject("videos", videoService.getSortedSubList(allVideos, page, sort));
+        mav.addObject("controls", videoService.getControls(allVideos.size(), page, sort));
 
         return mav;
     }

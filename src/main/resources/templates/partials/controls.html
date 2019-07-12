@@ -1,11 +1,23 @@
   <div class="controls container">
     <div class="row">
       <div class="col-6 col-sm-3 col-md-1 controls__prev">
-        <a>Prev</a>
+          <a
+            {{# controls.prev }}
+              href="{{ controls.prev }}"
+              class="active"
+            {{/ controls.prev }}
+          >
+            Prev</a>
       </div>
 
       <div class="col-6 col-sm-3 col-md-1 controls__next">
-        <a>Next</a>
+        {{^ controls.next }}
+          <a>Next</a>
+        {{/ controls.next }}
+
+        {{# controls.next }}
+          <a href="{{ controls.next }}">Next</a>
+        {{/ controls.next }}
       </div>
 
 <!--       <div class="col-12 col-sm-6 col-md-10 controls__sort">
