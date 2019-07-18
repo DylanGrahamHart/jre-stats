@@ -23,6 +23,8 @@ import java.util.Map;
 @Controller
 public class MainController {
 
+    private static Logger logger = LoggerFactory.getLogger(VideoService.class);
+
     @Autowired
     ChannelService channelService;
 
@@ -46,7 +48,7 @@ public class MainController {
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    protected String error() {
+    protected String error(Exception error) {
         return "Error";
     }
 }

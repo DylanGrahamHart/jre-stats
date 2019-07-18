@@ -32,11 +32,13 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class App {
 
+    private static Logger logger = LoggerFactory.getLogger(App.class);
+
 	public static void main(String[] args) {
 		ApplicationContext app = SpringApplication.run(App.class, args);
         VideoService videoService = app.getBean(VideoService.class);
         videoService.getAllVideos();
-        System.out.println("App done booting");
+        logger.info("App done booting");
 	}
 
 }

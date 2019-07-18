@@ -1,8 +1,6 @@
 package com.jrestats.service;
 
-import com.jrestats.controller.MainController;
-import com.jrestats.util.DataUtil;
-import com.jrestats.util.FormatUtil;
+import com.jrestats.util.JreUtil;
 import com.jrestats.viewmodel.Video;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -43,12 +39,13 @@ public class VideoService {
         Map<String, Object> playlistItems = getPlaylistItems(null);
         allPlaylistItems.add(playlistItems);
 
-        int totalResults = DataUtil.getInteger("pageInfo.totalResults", playlistItems);
-        String nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
+        Map<String, Object> pageInfo = JreUtil.getMap("pageInfo", playlistItems);
+        int totalResults = (Integer) pageInfo.get("totalResults");
+        String nextPageToken = (String) playlistItems.get("nextPageToken");
 
         for (int i = 0; i < totalResults / pagesOfVideosToGet; i++) {
             playlistItems = getPlaylistItems(nextPageToken);
-            nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
+            nextPageToken = (String) playlistItems.get("nextPageToken");
             allPlaylistItems.add(playlistItems);
         }
 
@@ -62,8 +59,12 @@ public class VideoService {
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
 
-            for (Map<String, Object> playlistItemItem : DataUtil.getList("items", playlistItem)) {
-                videoIds.add(DataUtil.getString("snippet.resourceId.videoId", playlistItemItem));
+            for (Map<String, Object> playlistItemItem : JreUtil.getList("items", playlistItem)) {
+                Map<String, Object> snippet = JreUtil.getMap("snippet", playlistItemItem);
+                Map<String, Object> resourceId = JreUtil.getMap("resourceId", snippet);
+                String videoId = (String) resourceId.get("videoId");
+
+                videoIds.add(videoId);
             }
 
             Map<String, Object> videos = apiService.get("videos",
@@ -72,7 +73,7 @@ public class VideoService {
                     "maxResults", "50"
             );
 
-            for (Map<String, Object> videoItem : DataUtil.getList("items", videos)) {
+            for (Map<String, Object> videoItem : JreUtil.getList("items", videos)) {
                 allVideos.add(new Video(videoItem));
             }
         }
