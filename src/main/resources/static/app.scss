@@ -25,6 +25,11 @@ p {
 a {
   text-decoration: none;
 }
+img {
+  max-width: 100%;
+  vertical-align: middle;
+  display: inline-block;
+}
 .container {
   width: 1040px;
   max-width: 100%;
@@ -96,19 +101,28 @@ a {
   color: $green;
   transform: skew(20deg);
 }
-.subs-views {
+.channel-info {
   margin-bottom: 10px;
 
   &__inner {
     background: #eee;
-    padding: 20px;
     border-radius: 2px;
+    padding: 10px;
+
+    &:after {
+      clear: both;
+      content: '';
+      display: block;
+    }
+  }
+
+  img {
+    float: left;
+    margin-right: 20px;
   }
 
   &__stat {
-    &:first-child {
-      margin-bottom: 10px;
-    }
+    margin: 10px 0;
   }
 }
 .controls {

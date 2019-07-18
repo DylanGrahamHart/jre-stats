@@ -1,10 +1,7 @@
-<div class="subs-views container">
-  <div class="row">
-    <div class="col-12">
-      <div class="subs-views__inner">
-          <div class="subs-views__stat"><b>Subscribers:</b> {{ channel.subscriberCount }}</div>
-          <div class="subs-views__stat"><b>Views:</b> {{ channel.viewCount }}</div>
-      </div>
-    </div>
+<div class="channel-info container">
+  <div class="channel-info__inner">
+    <img class="fleft" src="{{ channel.imgSrc }}">
+    <div class="channel-info__stat"><b>Subscribers:</b> {{ channel.subscriberCount }}</div>
+    <div class="channel-info__stat"><b>Views:</b> {{ channel.viewCount }}</div>
   </div>
 </div>
