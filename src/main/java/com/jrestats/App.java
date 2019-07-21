@@ -2,6 +2,7 @@ package com.jrestats;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jrestats.service.ChannelService;
+import com.jrestats.service.VideoCacheService;
 import com.jrestats.service.VideoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,8 @@ public class App {
     public static void main(String[] args) {
         ApplicationContext app = SpringApplication.run(App.class, args);
 
-        VideoService videoService = app.getBean(VideoService.class);
-        videoService.getAllVideos();
+        VideoCacheService videoCacheService = app.getBean(VideoCacheService.class);
+        videoCacheService.getAllVideos();
 
         ChannelService channelService = app.getBean(ChannelService.class);
         channelService.createChannelStat();

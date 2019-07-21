@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jrestats.db.entity.ChannelStat;
 import com.jrestats.db.repo.ChannelStatRepo;
 import com.jrestats.service.ChannelService;
+import com.jrestats.service.VideoCacheService;
 import com.jrestats.service.VideoService;
 import com.jrestats.service.YouTubeApiService;
 import com.jrestats.viewmodel.Channel;
@@ -36,6 +37,9 @@ public class MainController {
     @Autowired
     VideoService videoService;
 
+    @Autowired
+    VideoCacheService videoCacheService;
+
     @GetMapping("/")
     public ModelAndView home(
             @RequestParam(defaultValue = "0") String page,
@@ -44,7 +48,7 @@ public class MainController {
         ModelAndView mav = new ModelAndView("home");
         mav.addObject("channel", channelService.getChannel());
 
-        List<Video> allVideos = videoService.getAllVideos();
+        List<Video> allVideos = videoCacheService.getAllVideos();
         mav.addObject("videos", videoService.getSortedSubList(allVideos, page, sort));
         mav.addObject("controls", videoService.getControls(allVideos.size(), page, sort));
 

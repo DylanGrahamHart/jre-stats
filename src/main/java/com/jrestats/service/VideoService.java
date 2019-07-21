@@ -18,69 +18,6 @@ public class VideoService {
 
     private Logger logger = LoggerFactory.getLogger(VideoService.class);
 
-    @Autowired
-    YouTubeApiService apiService;
-
-    @Value("${jrestats.pagesOfVideosToGet:50}")
-    Integer pagesOfVideosToGet;
-
-    private Map<String, Object> getPlaylistItems(String nextPageToken) {
-        return apiService.get("playlistItems",
-                "playlistId", "UUzQUP1qoWDoEbmsQxvdjxgQ",
-                "part", "snippet",
-                "maxResults", "50",
-                "pageToken", nextPageToken
-        );
-    }
-
-    private List<Map<String, Object>> getAllPlaylistItems() {
-        List<Map<String, Object>> allPlaylistItems = new ArrayList<>();
-
-        Map<String, Object> playlistItems = getPlaylistItems(null);
-        allPlaylistItems.add(playlistItems);
-
-        Map<String, Object> pageInfo = JreUtil.getMap("pageInfo", playlistItems);
-        int totalResults = (Integer) pageInfo.get("totalResults");
-        String nextPageToken = (String) playlistItems.get("nextPageToken");
-
-        for (int i = 0; i < totalResults / pagesOfVideosToGet; i++) {
-            playlistItems = getPlaylistItems(nextPageToken);
-            nextPageToken = (String) playlistItems.get("nextPageToken");
-            allPlaylistItems.add(playlistItems);
-        }
-
-        return allPlaylistItems;
-    }
-
-    @Cacheable("allVideos")
-    public List<Video> getAllVideos() {
-        List<Video> allVideos = new ArrayList<>();
-
-        for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
-            List<String> videoIds = new ArrayList<>();
-
-            for (Map<String, Object> playlistItemItem : JreUtil.getList("items", playlistItem)) {
-                Map<String, Object> snippet = JreUtil.getMap("snippet", playlistItemItem);
-                Map<String, Object> resourceId = JreUtil.getMap("resourceId", snippet);
-                String videoId = (String) resourceId.get("videoId");
-
-                videoIds.add(videoId);
-            }
-
-            Map<String, Object> videos = apiService.get("videos",
-                    "id", String.join(",", videoIds),
-                    "part", "snippet,statistics",
-                    "maxResults", "50"
-            );
-
-            for (Map<String, Object> videoItem : JreUtil.getList("items", videos)) {
-                allVideos.add(new Video(videoItem));
-            }
-        }
-
-        return allVideos;
-    }
-
     public List<Video> getSortedSubList(List<Video> allVideos, String page, String sortKey) {
         int p = Integer.parseInt(page);
         int to = p * 50;

@@ -29,12 +29,12 @@ public class Channel {
         imgSrc = (String) img.get("url");
     }
 
-    public void setViewCount(Integer viewCount) {
+    private void setViewCount(Integer viewCount) {
         this.viewCountRaw = viewCount;
         this.viewCount = formatNumber(this.viewCountRaw);
     }
 
-    public void setSubscriberCount(Integer subscriberCount) {
+    private void setSubscriberCount(Integer subscriberCount) {
         this.subscriberCountRaw = subscriberCount;
         this.subscriberCount = formatNumber(this.subscriberCountRaw);
     }
