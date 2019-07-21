@@ -1,12 +1,14 @@
 package com.jrestats.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jrestats.db.entity.Derp;
-import com.jrestats.db.repo.DerpRepo;
+import com.jrestats.db.entity.ChannelStat;
+import com.jrestats.db.repo.ChannelStatRepo;
 import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoService;
+import com.jrestats.service.YouTubeApiService;
 import com.jrestats.viewmodel.Channel;
 import com.jrestats.viewmodel.Video;
+import org.omg.CORBA.Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +28,7 @@ public class MainController {
     private static Logger logger = LoggerFactory.getLogger(VideoService.class);
 
     @Autowired
-    DerpRepo derpRepo;
+    ChannelStatRepo channelStatRepo;
 
     @Autowired
     ChannelService channelService;
@@ -53,21 +51,16 @@ public class MainController {
         return mav;
     }
 
-    @GetMapping("/bitch")
+    @GetMapping("/get-channel-stats")
     @ResponseBody
-    public String home(
-        @RequestParam(defaultValue = "Ass Fucker") String name
-    ) throws Exception {
-        derpRepo.save(new Derp(name));
+    public Iterable<ChannelStat> getChannelStats() {
+        return channelStatRepo.findAll();
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            return mapper.writeValueAsString(derpRepo.findAll());
-        } catch (Exception e) {
-            logger.error("Some shit went wrong: " + e.getMessage());
-            return "Error";
-        }
+    @GetMapping("/create-channel-stat")
+    @ResponseBody
+    public ChannelStat createChannelStat() {
+        return channelService.createChannelStat();
     }
 
     @ExceptionHandler(Exception.class)

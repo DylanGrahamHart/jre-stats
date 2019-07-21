@@ -1,6 +1,7 @@
 package com.jrestats;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +35,17 @@ public class App {
 
     private static Logger logger = LoggerFactory.getLogger(App.class);
 
-	public static void main(String[] args) {
-		ApplicationContext app = SpringApplication.run(App.class, args);
+    public static void main(String[] args) {
+        ApplicationContext app = SpringApplication.run(App.class, args);
+
         VideoService videoService = app.getBean(VideoService.class);
         videoService.getAllVideos();
+
+        ChannelService channelService = app.getBean(ChannelService.class);
+        channelService.createChannelStat();
+
         logger.info("App done booting");
-	}
+    }
 
 }
 

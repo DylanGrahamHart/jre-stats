@@ -10,7 +10,7 @@
     timeToLiveSeconds="3600"
     memoryStoreEvictionPolicy="LRU" />
 
-  <cache name="channel"
+  <cache name="channelSnippet"
          maxEntriesLocalHeap="5"
          eternal="false"
          timeToLiveSeconds="60"
