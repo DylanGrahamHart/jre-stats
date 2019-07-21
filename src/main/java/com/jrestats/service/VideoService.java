@@ -18,6 +18,18 @@ public class VideoService {
 
     private Logger logger = LoggerFactory.getLogger(VideoService.class);
 
+    @Autowired
+    VideoCacheService videoCacheService;
+
+    public Map<String, Object> getVideoListViewModel(String page, String sortKey) {
+        Map<String, Object> videoList = new HashMap<>();
+
+        List<Video> allVideos = videoCacheService.getAllVideos();
+        videoList.put("list", getSortedSubList(allVideos, page, sortKey));
+        videoList.put("controls", getControls(allVideos.size(), page, sortKey));
+        return videoList;
+    }
+
     public List<Video> getSortedSubList(List<Video> allVideos, String page, String sortKey) {
         int p = Integer.parseInt(page);
         int to = p * 50;

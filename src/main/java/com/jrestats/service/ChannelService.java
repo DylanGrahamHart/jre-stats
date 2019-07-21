@@ -19,6 +19,9 @@ public class ChannelService {
     YouTubeApiService apiService;
 
     @Autowired
+    ChannelService channelService;
+
+    @Autowired
     ChannelCacheService channelCacheService;
 
     @Autowired
@@ -27,6 +30,11 @@ public class ChannelService {
     public Channel getChannel() {
         Map<String, Object> snippet = channelCacheService.getChannelSnippet();
         ChannelStat newestChannelStat = channelStatRepo.findTopByOrderByCreatedAtDesc();
+
+        if (newestChannelStat == null) {
+            newestChannelStat = channelService.createChannelStat();
+        }
+
         return new Channel(snippet, newestChannelStat);
     }
 

@@ -37,9 +37,6 @@ public class MainController {
     @Autowired
     VideoService videoService;
 
-    @Autowired
-    VideoCacheService videoCacheService;
-
     @GetMapping("/")
     public ModelAndView home(
             @RequestParam(defaultValue = "0") String page,
@@ -47,10 +44,7 @@ public class MainController {
     ) {
         ModelAndView mav = new ModelAndView("home");
         mav.addObject("channel", channelService.getChannel());
-
-        List<Video> allVideos = videoCacheService.getAllVideos();
-        mav.addObject("videos", videoService.getSortedSubList(allVideos, page, sort));
-        mav.addObject("controls", videoService.getControls(allVideos.size(), page, sort));
+        mav.addObject("videos", videoService.getVideoListViewModel(page, sort));
 
         return mav;
     }

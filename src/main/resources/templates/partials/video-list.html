@@ -1,6 +1,42 @@
-<div class="videos container">
+{{# videos }}
+<div class="video-list container">
+  <div class="controls row">
+    <div class="col-6 col-sm-3 col-md-1 controls__prev">
+      <a {{# controls.prev }} href="{{ controls.prev }}" class="active" {{/ controls.prev }}>Prev</a>
+    </div>
+    <div class="col-6 col-sm-3 col-md-1 controls__next">
+      <a {{# controls.next }} href="{{ controls.next }}" class="active" {{/ controls.next }}>Next</a>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-10 controls__sort">
+      <label>Sort By</label>
+
+      <select id="sort" onchange="JRE.sort(this.value)">
+        <option value="publishedAt">Date added (newest)</option>
+        <option value="-publishedAt">Date added (oldest)</option>
+        <option value="viewCount">Views (most)</option>
+        <option value="-viewCount">Views (least)</option>
+        <option value="likeCount">Likes (most)</option>
+        <option value="-likeCount">Likes (least)</option>
+        <option value="dislikeCount">Dislikes (most)</option>
+        <option value="-dislikeCount">Dislikes (least)</option>
+        <option value="likesPerView">Likes per view (most)</option>
+        <option value="-likesPerView">Likes per view (least)</option>
+        <option value="dislikesPerView">Dislikes per view (most)</option>
+        <option value="-dislikesPerView">Dislikes per view (least)</option>
+      </select>
+
+      <script>
+        var autoSelectSort = '{{ controls.sort }}';
+        if (autoSelectSort) {
+          document.getElementById('sort').value = autoSelectSort;
+        }
+      </script>
+    </div>
+  </div>
+
   <div class="row">
-    {{# videos }}
+    {{# list }}
       <div class="video col-12 col-sm-6 col-md-4 col-lg-3">
         <a href="https://www.youtube.com/watch?v={{ id }}" target="_blank">
           <div class="video__img"><img src="{{ imgSrc }}" /></div>
@@ -21,6 +57,7 @@
           </div>
         </a>
       </div>
-    {{/ videos }}
+    {{/ list }}
   </div>
 </div>
+{{/ videos }}
