@@ -53,6 +53,33 @@ public class VideoCacheService {
         return allPlaylistItems;
     }
 
+    public List<List<String>> getAllVideoIdsFromApi() {
+        List<List<String>> videoIds = new ArrayList<>();
+        List<VideoEntity> allVideoEntities = new ArrayList<>();
+
+        for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
+            List<String> videoIdsChunk = new ArrayList<>();
+
+            for (Map<String, Object> playlistItemItem : JreUtil.getList("items", playlistItem)) {
+                Map<String, Object> snippet = JreUtil.getMap("snippet", playlistItemItem);
+                Map<String, Object> resourceId = JreUtil.getMap("resourceId", snippet);
+                String videoId = (String) resourceId.get("videoId");
+
+                videoIdsChunk.add(videoId);
+
+                VideoEntity videoEntity = videoRepo.findTopByVideoId(videoId);
+                if (videoEntity == null) {
+                    allVideoEntities.add(new VideoEntity(videoId));
+                }
+            }
+
+            videoIds.add(videoIdsChunk);
+        }
+
+        videoRepo.save(allVideoEntities);
+        return videoIds;
+    }
+
     public List<List<String>> getAllVideoIdsFromEntities() {
         List<List<String>> videoIds = new ArrayList<>();
         List<String> videoIdsChunk = new ArrayList<>();
@@ -77,7 +104,7 @@ public class VideoCacheService {
         if (videoRepo.findAll().size() > 0) {
             videoIds = getAllVideoIdsFromEntities();
         } else {
-
+            videoIds = getAllVideoIdsFromApi();
         }
 
         return videoIds;
@@ -86,26 +113,10 @@ public class VideoCacheService {
     @Cacheable("allVideos")
     public List<Video> getAllVideos() {
         List<Video> allVideos = new ArrayList<>();
-        // List<VideoEntity> allVideoEntities = new ArrayList<>();
 
-        for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
-            List<String> videoIds = new ArrayList<>();
-
-            for (Map<String, Object> playlistItemItem : JreUtil.getList("items", playlistItem)) {
-                Map<String, Object> snippet = JreUtil.getMap("snippet", playlistItemItem);
-                Map<String, Object> resourceId = JreUtil.getMap("resourceId", snippet);
-                String videoId = (String) resourceId.get("videoId");
-
-                videoIds.add(videoId);
-
-//                VideoEntity videoEntity = videoRepo.findTopByVideoId(videoId);
-//                if (videoEntity == null) {
-//                    allVideoEntities.add(new VideoEntity(videoId));
-//                }
-            }
-
+        for (List<String> videoIdsChunk : getAllVideoIds()) {
             Map<String, Object> videos = apiService.get("videos",
-                "id", String.join(",", videoIds),
+                "id", String.join(",", videoIdsChunk),
                 "part", "snippet,statistics",
                 "maxResults", "50"
             );
@@ -114,8 +125,6 @@ public class VideoCacheService {
                 allVideos.add(new Video(videoItem));
             }
         }
-
-        // videoRepo.save(allVideoEntities);
 
         return allVideos;
     }
