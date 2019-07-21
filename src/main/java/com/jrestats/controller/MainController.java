@@ -1,15 +1,9 @@
 package com.jrestats.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jrestats.db.entity.ChannelStat;
+import com.jrestats.db.entity.ChannelStatEntity;
 import com.jrestats.db.repo.ChannelStatRepo;
 import com.jrestats.service.ChannelService;
-import com.jrestats.service.VideoCacheService;
 import com.jrestats.service.VideoService;
-import com.jrestats.service.YouTubeApiService;
-import com.jrestats.viewmodel.Channel;
-import com.jrestats.viewmodel.Video;
-import org.omg.CORBA.Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
-import java.util.Map;
 
 @Controller
 public class MainController {
@@ -51,13 +42,13 @@ public class MainController {
 
     @GetMapping("/get-channel-stats")
     @ResponseBody
-    public Iterable<ChannelStat> getChannelStats() {
+    public Iterable<ChannelStatEntity> getChannelStats() {
         return channelStatRepo.findAll();
     }
 
     @GetMapping("/create-channel-stat")
     @ResponseBody
-    public ChannelStat createChannelStat() {
+    public ChannelStatEntity createChannelStat() {
         return channelService.createChannelStat();
     }
 

@@ -1,6 +1,6 @@
 package com.jrestats.viewmodel;
 
-import com.jrestats.db.entity.ChannelStat;
+import com.jrestats.db.entity.ChannelStatEntity;
 import com.jrestats.util.JreUtil;
 
 import java.text.NumberFormat;
@@ -17,7 +17,7 @@ public class Channel {
 
     public String imgSrc;
 
-    public Channel(Map<String, Object> snippet, ChannelStat channelStat) {
+    public Channel(Map<String, Object> snippet, ChannelStatEntity channelStat) {
         setImgSrc(snippet);
         setSubscriberCount(channelStat.subscriberCount);
         setViewCount(channelStat.viewCount);

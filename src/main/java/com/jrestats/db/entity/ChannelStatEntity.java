@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "channel_stats")
-public class ChannelStat {
+public class ChannelStatEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -17,11 +17,11 @@ public class ChannelStat {
     public Integer viewCount;
     public Integer subscriberCount;
 
-    public ChannelStat() {
+    public ChannelStatEntity() {
 
     }
 
-    public ChannelStat(Integer subscriberCount, Integer viewCount) {
+    public ChannelStatEntity(Integer subscriberCount, Integer viewCount) {
         this.createdAt = new Date();
         this.viewCount = viewCount;
         this.subscriberCount = subscriberCount;

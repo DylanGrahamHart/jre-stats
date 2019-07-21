@@ -1,15 +1,12 @@
 package com.jrestats.service;
 
-import com.jrestats.db.entity.ChannelStat;
+import com.jrestats.db.entity.ChannelStatEntity;
 import com.jrestats.db.repo.ChannelStatRepo;
 import com.jrestats.util.JreUtil;
 import com.jrestats.viewmodel.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -29,7 +26,7 @@ public class ChannelService {
 
     public Channel getChannel() {
         Map<String, Object> snippet = channelCacheService.getChannelSnippet();
-        ChannelStat newestChannelStat = channelStatRepo.findTopByOrderByCreatedAtDesc();
+        ChannelStatEntity newestChannelStat = channelStatRepo.findTopByOrderByCreatedAtDesc();
 
         if (newestChannelStat == null) {
             newestChannelStat = channelService.createChannelStat();
@@ -38,7 +35,7 @@ public class ChannelService {
         return new Channel(snippet, newestChannelStat);
     }
 
-    public ChannelStat createChannelStat() {
+    public ChannelStatEntity createChannelStat() {
         Map<String, Object> response = apiService.get("channels",
             "id", "UCzQUP1qoWDoEbmsQxvdjxgQ",
             "part", "statistics"
@@ -50,7 +47,7 @@ public class ChannelService {
         Integer subscriberCount = Integer.parseInt((String) statistics.get("subscriberCount"));
         Integer viewCount = Integer.parseInt((String) statistics.get("viewCount"));
 
-        return channelStatRepo.save(new ChannelStat(subscriberCount, viewCount));
+        return channelStatRepo.save(new ChannelStatEntity(subscriberCount, viewCount));
     }
 
 }
