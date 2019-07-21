@@ -53,7 +53,7 @@ public class VideoCacheService {
         return allPlaylistItems;
     }
 
-    public List<List<String>> getAllVideoIds() {
+    public List<List<String>> getAllVideoIdsFromEntities() {
         List<List<String>> videoIds = new ArrayList<>();
         List<String> videoIdsChunk = new ArrayList<>();
 
@@ -66,6 +66,18 @@ public class VideoCacheService {
                 videoIdsChunk = new ArrayList<>();
                 chunkCount = 0;
             }
+        }
+
+        return videoIds;
+    }
+
+    public List<List<String>> getAllVideoIds() {
+        List<List<String>> videoIds = new ArrayList<>();
+
+        if (videoRepo.findAll().size() > 0) {
+            videoIds = getAllVideoIdsFromEntities();
+        } else {
+
         }
 
         return videoIds;
