@@ -1,5 +1,8 @@
 package com.jrestats.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jrestats.db.entity.Derp;
+import com.jrestats.db.repo.DerpRepo;
 import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoService;
 import com.jrestats.viewmodel.Channel;
@@ -16,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +28,9 @@ import java.util.Map;
 public class MainController {
 
     private static Logger logger = LoggerFactory.getLogger(VideoService.class);
+
+    @Autowired
+    DerpRepo derpRepo;
 
     @Autowired
     ChannelService channelService;
@@ -44,6 +51,23 @@ public class MainController {
         mav.addObject("controls", videoService.getControls(allVideos.size(), page, sort));
 
         return mav;
+    }
+
+    @GetMapping("/bitch")
+    @ResponseBody
+    public String home(
+        @RequestParam(defaultValue = "Ass Fucker") String name
+    ) throws Exception {
+        derpRepo.save(new Derp(name));
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.writeValueAsString(derpRepo.findAll());
+        } catch (Exception e) {
+            logger.error("Some shit went wrong: " + e.getMessage());
+            return "Error";
+        }
     }
 
     @ExceptionHandler(Exception.class)
