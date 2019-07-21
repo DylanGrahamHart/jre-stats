@@ -1,5 +1,7 @@
 package com.jrestats.service;
 
+import com.jrestats.db.entity.VideoEntity;
+import com.jrestats.db.repo.VideoRepo;
 import com.jrestats.util.JreUtil;
 import com.jrestats.viewmodel.Video;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +16,14 @@ import java.util.Map;
 @Service
 public class VideoCacheService {
 
+    @Value("${jrestats.pagesOfVideosToGet:50}")
+    Integer pagesOfVideosToGet;
+
     @Autowired
     YouTubeApiService apiService;
 
-    @Value("${jrestats.pagesOfVideosToGet:50}")
-    Integer pagesOfVideosToGet;
+    @Autowired
+    VideoRepo videoRepo;
 
     private Map<String, Object> getPlaylistItems(String nextPageToken) {
         return apiService.get("playlistItems",
@@ -48,9 +53,28 @@ public class VideoCacheService {
         return allPlaylistItems;
     }
 
+    public List<List<String>> getAllVideoIds() {
+        List<List<String>> videoIds = new ArrayList<>();
+        List<String> videoIdsChunk = new ArrayList<>();
+
+        Integer chunkCount = 0;
+        for (VideoEntity video : videoRepo.findAll()) {
+            videoIdsChunk.add(video.videoId);
+
+            if (++chunkCount == 50) {
+                videoIds.add(videoIdsChunk);
+                videoIdsChunk = new ArrayList<>();
+                chunkCount = 0;
+            }
+        }
+
+        return videoIds;
+    }
+
     @Cacheable("allVideos")
     public List<Video> getAllVideos() {
         List<Video> allVideos = new ArrayList<>();
+        // List<VideoEntity> allVideoEntities = new ArrayList<>();
 
         for (Map<String, Object> playlistItem : getAllPlaylistItems()) {
             List<String> videoIds = new ArrayList<>();
@@ -61,6 +85,11 @@ public class VideoCacheService {
                 String videoId = (String) resourceId.get("videoId");
 
                 videoIds.add(videoId);
+
+//                VideoEntity videoEntity = videoRepo.findTopByVideoId(videoId);
+//                if (videoEntity == null) {
+//                    allVideoEntities.add(new VideoEntity(videoId));
+//                }
             }
 
             Map<String, Object> videos = apiService.get("videos",
@@ -73,6 +102,8 @@ public class VideoCacheService {
                 allVideos.add(new Video(videoItem));
             }
         }
+
+        // videoRepo.save(allVideoEntities);
 
         return allVideos;
     }
