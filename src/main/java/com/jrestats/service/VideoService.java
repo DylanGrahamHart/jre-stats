@@ -41,84 +41,47 @@ public class VideoService {
 
     private int sortVideos(String sort, Video video1, Video video2) {
         int compareFlag = 0;
-
-        int likeCount1 = video1.likeCountRaw;
-        int likeCount2 = video2.likeCountRaw;
-        int dislikeCount1 = video1.dislikeCountRaw;
-        int dislikeCount2 = video2.dislikeCountRaw;
-        int viewCount1 = video1.viewCountRaw;
-        int viewCount2 = video2.viewCountRaw;
+        long compareValue1 = 0;
+        long compareValue2 = 0;
 
         if (sort.contains("publishedAt")) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            String dateStr1 = video1.publishedAtRaw;
-            String dateStr2 = video2.publishedAtRaw;
 
             try {
-                long date1 = dateFormat.parse(dateStr1).getTime();
-                long date2 = dateFormat.parse(dateStr2).getTime();
-
-                if (date1 > date2) {
-                    compareFlag = -1;
-                } else if (date2 > date1) {
-                    compareFlag = 1;
-                }
+                compareValue1 = dateFormat.parse(video1.publishedAtRaw).getTime();
+                compareValue2 = dateFormat.parse(video2.publishedAtRaw).getTime();
             } catch (ParseException e) {
                 logger.error("Date parsing problem: " + e.getMessage());
             }
         }
-
         if (sort.contains("viewCount")) {
-            if (viewCount1 > viewCount2) {
-                compareFlag = -1;
-            } else if (viewCount2 > viewCount1) {
-                compareFlag = 1;
-            }
+            compareValue1 = video1.viewCountRaw;
+            compareValue2 = video2.viewCountRaw;
         }
-
         if (sort.contains("likeCount")) {
-            if (likeCount1 > likeCount2) {
-                compareFlag = -1;
-            } else if (likeCount2 > likeCount1) {
-                compareFlag = 1;
-            }
+            compareValue1 = video1.likeCountRaw;
+            compareValue2 = video2.likeCountRaw;
         }
-
         if (sort.contains("dislikeCount")) {
-            if (dislikeCount1 > dislikeCount2) {
-                compareFlag = -1;
-            } else if (dislikeCount2 > dislikeCount1) {
-                compareFlag = 1;
-            }
+            compareValue1 = video1.dislikeCountRaw;
+            compareValue2 = video2.dislikeCountRaw;
         }
-
         if (sort.contains("likesPerView")) {
-            double likesPerView1 = (double) likeCount1 / (double) viewCount1;
-            double likesPerView2 = (double) likeCount2 / (double) viewCount2;
-
-            if (likesPerView1 > likesPerView2) {
-                compareFlag = -1;
-            } else if (likesPerView1 < likesPerView2) {
-                compareFlag = 1;
-            }
+            compareValue1 = (int) ((double) video1.likeCountRaw / (double) video1.viewCountRaw * 1000);
+            compareValue2 = (int) ((double) video2.likeCountRaw / (double) video2.viewCountRaw * 1000);
         }
-
         if (sort.contains("dislikesPerView")) {
-            double dislikesPerView1 = (double) dislikeCount1 / (double) viewCount1;
-            double dislikesPerView2 = (double) dislikeCount2 / (double) viewCount2;
-
-            if (dislikesPerView1 > dislikesPerView2) {
-                compareFlag = -1;
-            } else if (dislikesPerView1 < dislikesPerView2) {
-                compareFlag = 1;
-            }
+            compareValue1 = (int) ((double) video1.dislikeCountRaw / (double) video1.viewCountRaw * 1000);
+            compareValue2 = (int) ((double) video2.dislikeCountRaw / (double) video2.viewCountRaw * 1000);
         }
 
-        if (sort.contains("-")) {
-            return compareFlag * -1;
-        } else {
-            return compareFlag;
+        if (compareValue1 > compareValue2) {
+            compareFlag = -1;
+        } else if (compareValue2 > compareValue1) {
+            compareFlag = 1;
         }
+
+        return compareFlag * (sort.contains("-") ? -1 : 1);
     }
 
     public Map<String, Object> getControls(int numberOfVideos, String page, String sortKey) {

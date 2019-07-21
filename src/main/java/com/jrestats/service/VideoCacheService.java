@@ -1,6 +1,5 @@
 package com.jrestats.service;
 
-import com.jrestats.db.entity.VideoEntity;
 import com.jrestats.util.JreUtil;
 import com.jrestats.viewmodel.Video;
 import org.springframework.beans.factory.annotation.Autowired;

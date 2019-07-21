@@ -42,9 +42,6 @@ public class App {
         VideoCacheService videoCacheService = app.getBean(VideoCacheService.class);
         videoCacheService.getAllVideos();
 
-//        ChannelService channelService = app.getBean(ChannelService.class);
-//        channelService.createChannelStat();
-
         logger.info("App done booting");
     }
 
