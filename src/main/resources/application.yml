@@ -1,0 +1,13 @@
+server.port: 1337
+
+spring.jpa.hibernate.ddl-auto: create-drop
+
+spring.datasource.url: jdbc:mysql://104.198.209.129/jre_stats?useSSL=false
+spring.datasource.username: root
+spring.datasource.password: derpderp
+
+---
+
+spring:
+  profiles: local
+

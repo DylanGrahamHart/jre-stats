@@ -1,5 +1,6 @@
 package com.jrestats.service;
 
+import com.jrestats.config.PropConfig;
 import com.jrestats.util.JreUtil;
 import com.jrestats.viewmodel.Video;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ import java.util.Map;
 @Service
 public class VideoCacheService {
 
-    @Value("${jrestats.pagesOfVideosToGet:50}")
-    Integer pagesOfVideosToGet;
+    @Autowired
+    PropConfig propConfig;
 
     @Autowired
     YouTubeApiService apiService;
@@ -39,7 +40,10 @@ public class VideoCacheService {
         int totalResults = (Integer) pageInfo.get("totalResults");
         String nextPageToken = (String) playlistItems.get("nextPageToken");
 
-        for (int i = 0; i < totalResults / pagesOfVideosToGet; i++) {
+        int pagesOfVideosToGet = totalResults / 50;
+        if (propConfig.isLocal()) pagesOfVideosToGet = 3;
+
+        for (int i = 0; i < pagesOfVideosToGet; i++) {
             playlistItems = getPlaylistItems(nextPageToken);
             nextPageToken = (String) playlistItems.get("nextPageToken");
             allPlaylistItems.add(playlistItems);
@@ -58,6 +62,7 @@ public class VideoCacheService {
             for (Map<String, Object> playlistItemItem : JreUtil.getList("items", playlistItem)) {
                 Map<String, Object> snippet = JreUtil.getMap("snippet", playlistItemItem);
                 Map<String, Object> resourceId = JreUtil.getMap("resourceId", snippet);
+
                 String videoId = (String) resourceId.get("videoId");
 
                 videoIds.add(videoId);

@@ -1,5 +1,6 @@
 package com.jrestats.controller;
 
+import com.jrestats.config.PropConfig;
 import com.jrestats.db.entity.ChannelStatEntity;
 import com.jrestats.db.repo.ChannelStatRepo;
 import com.jrestats.service.ChannelService;
@@ -7,6 +8,7 @@ import com.jrestats.service.VideoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,9 @@ public class MainController {
     @Autowired
     VideoService videoService;
 
+    @Autowired
+    PropConfig propConfig;
+
     @GetMapping("/")
     public ModelAndView home(
             @RequestParam(defaultValue = "0") String page,
@@ -54,6 +59,7 @@ public class MainController {
     @GetMapping("/create-channel-stat")
     @ResponseBody
     public ChannelStatEntity createChannelStat() {
+        if (propConfig.isLocal()) return null;
         return channelService.createChannelStat();
     }
 
