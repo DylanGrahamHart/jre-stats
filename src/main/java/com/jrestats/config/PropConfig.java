@@ -10,7 +10,11 @@ public class PropConfig {
     @Value("${spring.profiles.active}")
     public String springActiveProfile;
 
+    @Value("${jrestats.pagesOfVideosToGet}")
+    public Integer pagesOfVideosToGet;
+
     public boolean isLocal() {
         return "local".equals(springActiveProfile);
     }
+
 }

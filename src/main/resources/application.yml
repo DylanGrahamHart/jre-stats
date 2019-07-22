@@ -11,3 +11,5 @@ spring.datasource.password: derpderp
 spring:
   profiles: local
 
+jrestats.pagesOfVideosToGet: 3
+

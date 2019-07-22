@@ -41,7 +41,7 @@ public class VideoCacheService {
         String nextPageToken = (String) playlistItems.get("nextPageToken");
 
         int pagesOfVideosToGet = totalResults / 50;
-        if (propConfig.isLocal()) pagesOfVideosToGet = 3;
+        if (propConfig.isLocal()) pagesOfVideosToGet = propConfig.pagesOfVideosToGet;
 
         for (int i = 0; i < pagesOfVideosToGet; i++) {
             playlistItems = getPlaylistItems(nextPageToken);
