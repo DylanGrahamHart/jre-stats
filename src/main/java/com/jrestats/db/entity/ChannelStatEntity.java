@@ -26,4 +26,10 @@ public class ChannelStatEntity {
         this.viewCount = viewCount;
         this.subscriberCount = subscriberCount;
     }
+
+    public ChannelStatEntity(Long createdAt, Integer subscriberCount, Integer viewCount) {
+        this.createdAt = new Date(createdAt);
+        this.viewCount = viewCount;
+        this.subscriberCount = subscriberCount;
+    }
 }

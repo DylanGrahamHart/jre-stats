@@ -1,6 +1,9 @@
 package com.jrestats;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jrestats.db.entity.ChannelStatEntity;
+import com.jrestats.db.repo.ChannelStatRepo;
+import com.jrestats.db.seed.ChannelStatSeeder;
 import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoCacheService;
 import com.jrestats.service.VideoService;
@@ -23,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.nio.channels.Channel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +45,9 @@ public class App {
 
         VideoCacheService videoCacheService = app.getBean(VideoCacheService.class);
         videoCacheService.getAllVideos();
+
+        ChannelStatSeeder channelStatSeeder = app.getBean(ChannelStatSeeder.class);
+        channelStatSeeder.seedChannelStats();
 
         logger.info("App done booting");
     }
