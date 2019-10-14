@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "deploy": "./gcloud/deploy.sh",
+    "deploy": "npm install; gulp build; ./gcloud/deploy.sh",
     "startup": "gsutil cp gcloud/startup.sh gs://jre-stats-jars/startup.sh"
   },
   "devDependencies": {

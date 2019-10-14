@@ -41,6 +41,10 @@ function cssWatch() {
   gulp.watch(CSS_SRC, gulp.parallel(css1, css2));
 }
 
+exports.build = gulp.parallel(
+  html, css1, css2, js
+);
+
 exports.default = gulp.parallel(
   htmlWatch, cssWatch, jsWatch,
   html, css1, css2, js
