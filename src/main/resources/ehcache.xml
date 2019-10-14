@@ -7,7 +7,7 @@
   <cache name="allVideos"
     maxEntriesLocalHeap="5"
     eternal="false"
-    timeToLiveSeconds="3600"
+    timeToLiveSeconds="7200"
     memoryStoreEvictionPolicy="LRU" />
 
   <cache name="channel"
