@@ -59,7 +59,6 @@ public class MainController {
     @GetMapping("/create-channel-stat")
     @ResponseBody
     public ChannelStatEntity createChannelStat() {
-        if (propConfig.isLocal()) return null;
         return channelService.createChannelStat();
     }
 

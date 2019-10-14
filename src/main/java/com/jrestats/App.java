@@ -51,7 +51,6 @@ public class App {
 
         logger.info("App done booting");
     }
-
 }
 
 
