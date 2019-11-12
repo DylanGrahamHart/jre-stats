@@ -8,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -25,8 +27,8 @@ public class VideoService {
     @Autowired
     YouTubeApiService apiService;
 
-    @Value("${jrestats.pagesOfVideosToGet:50}")
-    Integer pagesOfVideosToGet;
+    @Autowired
+    Environment env;
 
     private Map<String, Object> getPlaylistItems(String nextPageToken) {
         return apiService.get("playlistItems",
@@ -35,6 +37,18 @@ public class VideoService {
                 "maxResults", "50",
                 "pageToken", nextPageToken
         );
+    }
+
+    private int pagesOfVideosToGet(int totalResults) {
+        String[] profiles = env.getActiveProfiles();
+        if (profiles.length > 0) {
+            String profile = profiles[0];
+            if ("local".equals(profile)) {
+                return 3;
+            }
+        }
+
+        return totalResults / 50;
     }
 
     private List<Map<String, Object>> getAllPlaylistItems() {
@@ -46,7 +60,7 @@ public class VideoService {
         int totalResults = DataUtil.getInteger("pageInfo.totalResults", playlistItems);
         String nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
 
-        for (int i = 0; i < totalResults / pagesOfVideosToGet; i++) {
+        for (int i = 0; i < pagesOfVideosToGet(totalResults); i++) {
             playlistItems = getPlaylistItems(nextPageToken);
             nextPageToken = DataUtil.getString("nextPageToken", playlistItems);
             allPlaylistItems.add(playlistItems);
