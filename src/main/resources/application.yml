@@ -4,5 +4,3 @@ server.port: 1337
 
 spring:
   profiles: local
-
-jrestats.pagesOfVideosToGet: 500
