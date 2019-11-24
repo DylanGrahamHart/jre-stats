@@ -1,0 +1,34 @@
+
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'UA-30447151-5');
+</script>
+
+<script>
+
+window.addEventListener('load', function() {
+
+  function loadScript(config) {
+    var script = document.createElement('script');
+
+    if (config.onload) {
+      script.onload = config.onload;
+    }
+
+    if (config.async) {
+      script.async = config.async;
+    }
+
+    script.src = config.src;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  loadScript({ src: 'https://www.googletagmanager.com/gtag/js?id=UA-30447151-5' });
+  loadScript({ src: '/app.js' });
+});
+
+</script>
+
