@@ -81,18 +81,18 @@ a {
 .fleft {
   float: left;
 }
-#header {
+header {
   background: $black;
   padding: 10px 0;
   margin-bottom: 20px;
 }
-#header a {
+header a {
   font-size: 32px;
   color: #fff;
   transition: 1s;
   display: inline-block;
 }
-#header a:hover {
+header a:hover {
   color: $green;
   transform: skew(20deg);
 }

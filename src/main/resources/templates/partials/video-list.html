@@ -2,9 +2,9 @@
   <div class="row">
     {{# videos }}
       <div class="video col-12 col-sm-6 col-md-4 col-lg-3">
-        <a href="https://www.youtube.com/watch?v={{ id }}" target="_blank">
+        <a href="https://www.youtube.com/watch?v={{ id }}" target="_blank" rel="noreferrer">
           <div class="video__img">
-            <img src="{{ imgSrc }}">
+            <img src="{{ imgSrc }}" alt="{{ title }}">
           </div>
           <div class="video__title">{{ title }}</div>
 

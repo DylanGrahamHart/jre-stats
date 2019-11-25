@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <title>JRE Stats</title>
+  <meta name="description" content="JRE Stats is where you can find the best Joe Rogan Experience YouTube videos. See how the channel is growing and find videos that YouTube would never let you find!">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
   <link rel="stylesheet" href="/app.css">
-
-<!--   <link rel="preload" href="https://www.googletagmanager.com/gtag/js?id=UA-30447151-5" as="script">
-  <link rel="preload" href="/scripts/jquery-3.4.1.slim.min.js" as="script">
-  <link rel="preload" href="/scripts/app.js" as="script"> -->
 </head>
 
 <body>
 
   {{> partials/header }}
 
-  {{> partials/channel-info }}
-  {{> partials/controls }}
-  {{> partials/video-list }}
+  <main>
+    {{> partials/channel-info }}
+    {{> partials/controls }}
+    {{> partials/video-list }}
+  </main>
 
   {{> partials/_footer }}
 </body>
