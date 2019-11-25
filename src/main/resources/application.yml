@@ -4,3 +4,4 @@ server.port: 1337
 
 spring:
   profiles: local
+

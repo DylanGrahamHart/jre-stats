@@ -7,7 +7,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const HTML_SRC = 'src/main/resources/templates/**/*.html';
 function html() {
   return gulp.src(HTML_SRC)
-    .pipe(gulp.dest('out/production/resources/templates'));
+    .pipe(gulp.dest('build/resources/main/templates'));
 }
 function htmlWatch() {
   gulp.watch(HTML_SRC, html);
@@ -16,7 +16,7 @@ function htmlWatch() {
 const JS_SRC = 'src/main/resources/static/**/*.js';
 function js() {
   return gulp.src(JS_SRC)
-    .pipe(gulp.dest('out/production/resources/static'));
+    .pipe(gulp.dest('build/resources/main/static'));
 }
 function jsWatch() {
   gulp.watch(JS_SRC, js);
@@ -28,7 +28,7 @@ function css1() {
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('out/production/resources/static'));
+    .pipe(gulp.dest('build/resources/main/static'));
 }
 function css2() {
   return gulp.src(CSS_SRC)

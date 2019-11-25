@@ -27,7 +27,12 @@ window.addEventListener('load', function() {
   }
 
   loadScript({ src: 'https://www.googletagmanager.com/gtag/js?id=UA-30447151-5' });
-  loadScript({ src: '/app.js' });
+
+  loadScript({
+    src: '/scripts/jquery-3.4.1.slim.min.js',
+    onload: function() { loadScript({ src: '/scripts/app.js' }) }
+  });
+
 });
 
 </script>
