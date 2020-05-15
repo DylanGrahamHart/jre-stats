@@ -4,16 +4,21 @@ import com.jrestats.service.ChannelService;
 import com.jrestats.service.VideoService;
 import com.jrestats.viewmodel.Channel;
 import com.jrestats.viewmodel.Video;
+import org.apache.tomcat.util.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -46,7 +51,14 @@ public class MainController {
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    protected String error() {
+    protected String error(Exception e, WebRequest request) {
+        if (request.getParameter("derp") != null) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            return sw.toString();
+        }
+
         return "Error";
     }
 }
