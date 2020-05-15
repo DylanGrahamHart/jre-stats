@@ -39,4 +39,8 @@ public class DataUtil {
     public static Integer getInteger(String keyPath, Map<String, Object> map) {
         return Integer.parseInt(getString(keyPath, map));
     }
+
+    public static Long getLong(String keyPath, Map<String, Object> map) {
+        return Long.parseLong(getString(keyPath, map));
+    }
 }

@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public class FormatUtil {
 
-    public static String formatNumber(Integer numberToFormat) {
+    public static String formatNumber(Number numberToFormat) {
         NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
         return numberFormat.format(numberToFormat.longValue());
     }
