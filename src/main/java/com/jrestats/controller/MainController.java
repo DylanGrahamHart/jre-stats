@@ -56,7 +56,7 @@ public class MainController {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
-            return sw.toString();
+            return e.getMessage() + "\n\n" + sw.toString();
         }
 
         return "Error";

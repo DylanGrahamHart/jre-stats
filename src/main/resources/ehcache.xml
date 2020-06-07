@@ -7,13 +7,13 @@
   <cache name="allVideos"
     maxEntriesLocalHeap="5"
     eternal="false"
-    timeToLiveSeconds="36000"
+    timeToLiveSeconds="3600"
     memoryStoreEvictionPolicy="LRU" />
 
   <cache name="channel"
          maxEntriesLocalHeap="5"
          eternal="false"
-         timeToLiveSeconds="300"
+         timeToLiveSeconds="60"
          memoryStoreEvictionPolicy="LRU" />
 
 </ehcache>
