@@ -111,8 +111,6 @@ public class VideoService {
 
         int likeCount1 = video1.likeCountRaw;
         int likeCount2 = video2.likeCountRaw;
-        int dislikeCount1 = video1.dislikeCountRaw;
-        int dislikeCount2 = video2.dislikeCountRaw;
         int viewCount1 = video1.viewCountRaw;
         int viewCount2 = video2.viewCountRaw;
 
@@ -151,14 +149,6 @@ public class VideoService {
             }
         }
 
-        if (sort.contains("dislikeCount")) {
-            if (dislikeCount1 > dislikeCount2) {
-                compareFlag = -1;
-            } else if (dislikeCount2 > dislikeCount1) {
-                compareFlag = 1;
-            }
-        }
-
         if (sort.contains("likesPerView")) {
             double likesPerView1 = (double) likeCount1 / (double) viewCount1;
             double likesPerView2 = (double) likeCount2 / (double) viewCount2;
@@ -166,17 +156,6 @@ public class VideoService {
             if (likesPerView1 > likesPerView2) {
                 compareFlag = -1;
             } else if (likesPerView1 < likesPerView2) {
-                compareFlag = 1;
-            }
-        }
-
-        if (sort.contains("dislikesPerView")) {
-            double dislikesPerView1 = (double) dislikeCount1 / (double) viewCount1;
-            double dislikesPerView2 = (double) dislikeCount2 / (double) viewCount2;
-
-            if (dislikesPerView1 > dislikesPerView2) {
-                compareFlag = -1;
-            } else if (dislikesPerView1 < dislikesPerView2) {
                 compareFlag = 1;
             }
         }
